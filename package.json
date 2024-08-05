@@ -1,0 +1,23 @@
+{
+  "name": "gemini-mud",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A MUD-style text adventure game powered by Google Gemini AI",
+  "main": "game.js",
+  "scripts": {
+    "start": "node game.js"
+  },
+  "keywords": ["mud", "text-adventure", "gemini-ai", "nodejs", "ai", "generative"],
+  "author": "Rajat Kumar <rajatasusual.github.io>",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.16.0",
+    "ajv": "^8.17.1",
+    "dotenv": "^16.4.5",
+    "readline-sync": "^1.4.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rajatasusual/gemini-mud.git"
+  }
+}
