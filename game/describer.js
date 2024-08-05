@@ -1,11 +1,3 @@
-/**
- * Describer class represents a game master that generates descriptions of entities using
- * the GoogleGenerativeAI API.
- * @class
- * @author Rajat Kumar
- * @see https://rajatasusual.github.io/gemini-mud/
- */
-
 // Conditional import for Node.js environment
 let GoogleGenerativeAI;
 let dotenv;
@@ -19,6 +11,10 @@ if (typeof window === "undefined") {
   GoogleGenerativeAI = window.GoogleGenerativeAI;
 }
 
+/**
+ * Class representing a Describer.
+ * @class
+ */
 class Describer {
   /**
    * Creates an instance of Describer.

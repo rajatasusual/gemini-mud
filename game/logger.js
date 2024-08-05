@@ -1,9 +1,4 @@
-/**
- * Logs a message to the console in both Node.js and browser environments.
- *
- * @param {string} message - The message to be logged.
- * @return {void} This function does not return anything.
- */
+// Modify console.log statements to work in both Node.js and browser environments
 const logMessage = (message) => {
     if (typeof window === "undefined") {
         console.log(message);

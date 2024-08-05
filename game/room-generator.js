@@ -1,29 +1,8 @@
-/**
- * @typedef {import("./game-schema").default} GameSchema
- * @typedef {import("./logger").default} Logger
- * @typedef {import("@google/generative-ai").GenerativeModel} GenerativeModel
- * @typedef {import("ajv").Ajv} Ajv
- */
-
-/**
- * @typedef {Object} CellInfo
- * @property {string} type - The type of the cell.
- * @property {Object.<string, boolean>} exits - An object representing the exits from the cell, where the keys are the directions and the values are boolean indicating whether there is an exit in that direction.
- */
-
-/**
- * @typedef {Object} Room
- * @property {string} type - The type of the room.
- * @property {Object.<string, boolean>} exits - An object representing the exits from the room, where the keys are the directions and the values are boolean indicating whether there is an exit in that direction.
- * @property {Array<string>} items - An array of strings representing the items in the room.
- */
-
 let GoogleGenerativeAI;
 let dotenv;
 let Ajv;
 
 const diskSchema = require("./game-schema").default;
-/** @type {Logger} */
 const relayMessage = require("./logger").default;
 
 // Add a check to avoid using Node.js specific 'dotenv' in browser environment
@@ -59,9 +38,7 @@ class RoomGenerator {
    * @return {void}
    */
   constructor() {
-    /** @type {Ajv} */
     const ajv = new Ajv({ strict: false });
-    /** @type {GameSchema["properties"]["rooms"]["items"]} */
     this.schema = diskSchema.properties.rooms.items;
     this.validate = ajv.compile(this.schema);
 
@@ -104,8 +81,10 @@ class RoomGenerator {
   /**
    * Asynchronously generates a room description for a MUD-style game based on the provided cell information.
    *
-   * @param {CellInfo} cellInfo - An object containing information about the cell, including its type and exits.
-   * @return {Promise<?Room>} A promise that resolves to the generated room description as a JSON object if it passes validation, or null if it fails validation or if there is an error.
+   * @param {Object} cellInfo - An object containing information about the cell, including its type and exits.
+   * @param {string} cellInfo.type - The type of the cell.
+   * @param {Object.<string, boolean>} cellInfo.exits - An object representing the exits from the cell, where the keys are the directions and the values are boolean indicating whether there is an exit in that direction.
+   * @return {Promise<?Object>} A promise that resolves to the generated room description as a JSON object if it passes validation, or null if it fails validation or if there is an error.
    */
   async generateRoom(cellInfo) {
     const prompt = `Generate a room description for a ${cellInfo.type} room in a MUD-style game. 
@@ -118,7 +97,6 @@ class RoomGenerator {
 
     let response = await this.chat.sendMessage(prompt);
     try {
-      /** @type {Room} */
       const generatedRoom = JSON.parse(response.response.text());
       if (!this.validate(generatedRoom)) {
         console.error("[ERROR]: Cannot validate generated room");

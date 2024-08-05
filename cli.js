@@ -1,20 +1,14 @@
-/**
- * @typedef {import("./game/game-map.js").default} GameMap
- * @typedef {import("./game/game-engine.js").default} GameEngine
- * @typedef {import("./game/logger.js").default} Logger
- */
+const GameMap = require('./game/game-map.js').default;
+const GameEngine = require('./game/game-engine.js').default;
+const relayMessage = require('./game/logger.js').default;
 
-// Load environment variables if running in Node.js
 let dotenv;
 if (typeof window === "undefined") {
   dotenv = require("dotenv");
   dotenv.config();
 }
 
-/**
- * Returns user input from the command line or browser prompt.
- * @return {string} The user's input in lowercase.
- */
+// Replace readline-sync's question() with browser prompt() and Node.js readline-sync
 const getInput = () => {
   if (typeof window === "undefined") {
     const question = require('readline-sync').question;
@@ -24,10 +18,9 @@ const getInput = () => {
   }
 };
 
-/** @type {boolean} */
+// Add a check to avoid using Node.js specific 'dotenv' in browser environment
 const LOG = typeof process !== "undefined" && process.env ? process.env.LOG === "true" : false;
 
-/** @type {number} */
 const MAP_SIZE = typeof process !== "undefined" && process.env ? parseInt(process.env.MAP_SIZE) : 3;
 
 /**
