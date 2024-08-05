@@ -1,15 +1,26 @@
-const Describer = require("./describer.js").default;
-const relayMessage = require("./logger").default;
-const RoomGenerator = require("./room-generator.js").default;
+/**
+ * @typedef {import("./describer.js").default} Describer
+ * @typedef {import("./logger.js").default} Logger
+ * @typedef {import("./room-generator.js").default} RoomGenerator
+ */
 
+// Load environment variables if running in Node.js
 let dotenv;
 if (typeof window === "undefined") {
   dotenv = require("dotenv");
   dotenv.config();
 }
 
+// Get environment variables
+/** @type {boolean} */
 const LOG = typeof process !== "undefined" && process.env ? process.env.LOG === "true" : window.LOG === true;
+/** @type {boolean} */
 const GENERATE = typeof process !== "undefined" && process.env ? process.env.GENERATE === "true" : window.GENERATE === true;
+
+// Import dependencies
+const Describer = require("./describer.js").default;
+const relayMessage = require("./logger").default;
+const RoomGenerator = require("./room-generator.js").default;
 
 /**
  * GameEngine class implements the game logic.
