@@ -1,11 +1,15 @@
-import Describer from "./describer.js";
-import RoomGenerator from "./room-generator.js";
+const Describer = require("./describer.js").default;
+const relayMessage = require("./logger").default;
+const RoomGenerator = require("./room-generator.js").default;
 
-import dotenv from "dotenv";
-dotenv.config();
+let dotenv;
+if (typeof window === "undefined") {
+  dotenv = require("dotenv");
+  dotenv.config();
+}
 
-const LOG = process.env.LOG === "true";
-const GENERATE = process.env.GENERATE === "true";
+const LOG = typeof process !== "undefined" && process.env ? process.env.LOG === "true" : window.LOG === true;
+const GENERATE = typeof process !== "undefined" && process.env ? process.env.GENERATE === "true" : window.GENERATE === true;
 
 /**
  * GameEngine class implements the game logic.
@@ -15,12 +19,12 @@ const GENERATE = process.env.GENERATE === "true";
  * @see https://rajatasusual.github.io/gemini-mud/
  */
 class GameEngine {
-/**
- * Creates a new instance of the GameEngine class.
- *
- * @param {Object} gameMap - The game map object.
- * @return {Promise<GameEngine>} A promise that resolves to the initialized GameEngine instance.
- */
+  /**
+   * Creates a new instance of the GameEngine class.
+   *
+   * @param {Object} gameMap - The game map object.
+   * @return {Promise<GameEngine>} A promise that resolves to the initialized GameEngine instance.
+   */
   constructor(gameMap) {
     this.gameMap = gameMap;
     this.roomGenerator = new RoomGenerator(); // Instantiate the RoomGenerator
@@ -32,11 +36,11 @@ class GameEngine {
     })();
   }
 
-/**
- * Initializes the player object and generates the first room if GENERATE is true.
- *
- * @return {Promise<void>} A Promise that resolves when the initialization is complete.
- */
+  /**
+   * Initializes the player object and generates the first room if GENERATE is true.
+   *
+   * @return {Promise<void>} A Promise that resolves when the initialization is complete.
+   */
   async init() {
     this.player = {
       x: this.gameMap.start.x,
@@ -74,7 +78,7 @@ class GameEngine {
       cellInfo.room = room;
     } else {
       if (LOG) {
-        console.log("This cell is already occupied.");
+        relayMessage("Cell is already occupied.");
       }
       return null; // Or throw an error
     }
@@ -111,7 +115,7 @@ class GameEngine {
 
     // Display map
     for (const row of map) {
-      console.log(row.join(" "));
+      relayMessage(row.join(" "));
     }
   }
 
@@ -148,7 +152,7 @@ class GameEngine {
         this.quit();
         break;
       default:
-        console.log("Invalid command.");
+        relayMessage("Invalid command.");
         break;
     }
   }
@@ -163,7 +167,7 @@ class GameEngine {
     const currentRoom = this.gameMap.rooms[`${this.player.x},${this.player.y}`];
 
     if (!currentRoom) {
-      console.log("There's nothing here.");
+      relayMessage("There's nothing here.");
       return;
     }
 
@@ -173,7 +177,7 @@ class GameEngine {
     }
 
     // Display room description (you might need to parse JSON here)
-    console.log(currentRoom["narration"]);
+    relayMessage(currentRoom["narration"]);
   }
 
   /**
@@ -211,23 +215,23 @@ class GameEngine {
         }
 
         this.player.pathTaken.push({ x: this.player.x, y: this.player.y }); // Add new position to pathTaken
-        console.log(`You move ${direction}.\n`);
+        relayMessage(`You move ${direction}.\n`);
         this.showPathTaken();
 
         await this.look(); // Automatically look around after moving
       }
 
     } else {
-      console.log("You can't go that way.");
+      relayMessage("You can't go that way.");
     }
   }
 
-/**
- * Takes an item from the room and adds it to the player's inventory.
- *
- * @param {string} itemName - The name of the item to be taken.
- * @return {void} This function does not return a value.
- */
+  /**
+   * Takes an item from the room and adds it to the player's inventory.
+   *
+   * @param {string} itemName - The name of the item to be taken.
+   * @return {void} This function does not return a value.
+   */
   takeItem(itemName) {
     // ... (implementation for picking up an item)
 
@@ -277,8 +281,8 @@ class GameEngine {
       (pos) => this.gameMap.rooms[`${pos.x},${pos.y}`]
     );
     const journeyDescription = await this.describer.describeJourney(roomsVisited);
-    console.log("\nCongratulations! You have reached the end of the game!");
-    console.log(journeyDescription);
+    relayMessage("\nCongratulations! You have reached the end of the game!");
+    relayMessage(journeyDescription);
 
     this.quit();
   }
@@ -289,10 +293,11 @@ class GameEngine {
    * @return {void} This function does not return a value.
    */
   quit() {
-    console.log("Thanks for playing!");
-    process.exit(0); // Exit the game
+    relayMessage("Thanks for playing!");
+    if (typeof process !== "undefined" && process.exit) {
+      process.exit(0); // Exit the game in Node.js environment
+    }
   }
 }
 
-export default GameEngine;
-
+module.exports = { default: GameEngine };

@@ -1,13 +1,24 @@
+let GoogleGenerativeAI;
+let dotenv;
+let Ajv;
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import Ajv from "ajv";
+const diskSchema = require("./game-schema").default;
+const relayMessage = require("./logger").default;
 
-import diskSchema from "./game-schema.js";
+// Add a check to avoid using Node.js specific 'dotenv' in browser environment
+if (typeof window === "undefined") {
+  GoogleGenerativeAI = require("@google/generative-ai").GoogleGenerativeAI;
+  dotenv = require("dotenv");
+  Ajv = require("ajv").Ajv;
+  dotenv.config();
+} else {
+  // Assuming you have a way to provide the API key in the browser environment
+  GoogleGenerativeAI = window.GoogleGenerativeAI;
+  Ajv = window.ajv7;
+}
 
-import dotenv from "dotenv";
-dotenv.config();
-
-const LOG = process.env.LOG === "true";
+const API_KEY = typeof process !== "undefined" && process.env ? process.env.API_KEY : window.API_KEY;
+const LOG = typeof process !== "undefined" && process.env ? process.env.LOG === "true" : window.LOG === true;
 
 /**
  * RoomGenerator class generates rooms for a MUD-style game using Generative AI.
@@ -41,7 +52,7 @@ class RoomGenerator {
    * @return {Promise<GenerativeModel>} A promise that resolves to a generative model.
    */
   getModel() {
-    const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+    const genAI = new GoogleGenerativeAI(API_KEY);
 
     return genAI.getGenerativeModel({
       model: "gemini-1.5-pro",
@@ -93,15 +104,15 @@ class RoomGenerator {
 
       } else {
         if(LOG) {
-          console.log("[INFO] Room generated", generatedRoom);
+          relayMessage("[INFO] Room generated", generatedRoom);
         }
         return generatedRoom;
       }
     } catch (err) {
-      console.log(err);
+      relayMessage(err);
       return null;
     }
   }
 }
 
-export default RoomGenerator;
+module.exports = { default: RoomGenerator };

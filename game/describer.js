@@ -1,9 +1,15 @@
+// Conditional import for Node.js environment
+let GoogleGenerativeAI;
+let dotenv;
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-import dotenv from "dotenv";
-dotenv.config();
-
+if (typeof window === "undefined") {
+  GoogleGenerativeAI = require("@google/generative-ai").GoogleGenerativeAI;
+  dotenv = require("dotenv");
+  dotenv.config();
+} else {
+  // Assuming you have a way to provide the API key in the browser environment
+  GoogleGenerativeAI = window.GoogleGenerativeAI;
+}
 
 /**
  * Class representing a Describer.
@@ -18,13 +24,14 @@ class Describer {
     this.model = this.getModel();
   }
 
-/**
- * Retrieves a generative model from the GoogleGenerativeAI API.
- *
- * @return {Promise<GenerativeModel>} A promise that resolves to a generative model.
- */
+  /**
+   * Retrieves a generative model from the GoogleGenerativeAI API.
+   *
+   * @return {Promise<GenerativeModel>} A promise that resolves to a generative model.
+   */
   getModel() {
-    const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+    const apiKey = typeof process !== "undefined" && process.env ? process.env.API_KEY : window.API_KEY;
+    const genAI = new GoogleGenerativeAI(apiKey);
 
     return genAI.getGenerativeModel({
       model: "gemini-1.5-pro",
@@ -32,8 +39,8 @@ class Describer {
         maxOutputTokens: 2000
       },
       systemInstruction: `
-        You are a game master that describes a given JSON representation of an entity into cohesive natural language, without any disclaimers or forewords.
-        `
+      You are a game master that describes a given JSON representation of an entity into cohesive natural language, without any disclaimers or forewords.
+      `
     });
   }
 
@@ -77,4 +84,4 @@ class Describer {
   }
 }
 
-export default Describer;
+module.exports = { default: Describer };

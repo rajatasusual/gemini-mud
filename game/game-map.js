@@ -1,3 +1,4 @@
+const relayMessage = require('./logger.js').default;
 /**
  * Class representing a game map.
  * @class
@@ -125,6 +126,7 @@ class GameMap {
    *
    * @return {void} This function does not return anything.
    */
+  // Modify the display method to avoid direct relayMessage in browser
   display() {
     const map = Array.from({ length: this.size }, () => Array(this.size).fill(' '));
 
@@ -141,9 +143,12 @@ class GameMap {
     map[this.start.y][this.start.x] = 'S';
     map[this.end.y][this.end.x] = 'E';
 
-    for (const row of map) {
-      console.log(row.join(' | '));
-      console.log('-'.repeat(this.size * 4 - 1));
+    const mapRows = map.map(row => row.join(' | ')).join('\n' + '-'.repeat(this.size * 4 - 1) + '\n');
+
+    if (typeof window === "undefined") {
+      relayMessage(mapRows);
+    } else {
+      document.body.innerText = mapRows; // Display in browser
     }
   }
 
@@ -197,4 +202,4 @@ class GameMap {
 
 }
 
-export default GameMap;
+module.exports = { default: GameMap };

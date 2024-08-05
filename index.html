@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Game</title>
+</head>
+
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.17.1/ajv7.min.js"
+    integrity="sha512-OIkF2zyWS+sUanhT2i75RexNDQ2EKHayyeOxBx4Z4ct0D+dlPzZPhHTi7xZ5eU7aznNLMX7pCZyZVSi25+EGMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "@google/generative-ai": "https://esm.run/@google/generative-ai"
+      }
+    }
+  </script>
+  <script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+    window.GoogleGenerativeAI = GoogleGenerativeAI;
+    window.Ajv = window.ajv7;
+
+    window.API_KEY = "AIzaSyCpMEY1mrUcSDIKtFqI3M4Ssv80LCUfqyw";
+
+    window.MAP_SIZE = 3;
+    window.LOG = false;
+    window.GENERATE = true;
+  </script>
+  <script src="dist/bundle.js" defer></script>
+  <div id="output"></div>
+  <input type="text" id="input" placeholder="Enter command">
+  
+</body>
+
+</html>

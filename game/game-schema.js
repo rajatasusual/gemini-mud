@@ -205,4 +205,4 @@ const diskSchema = {
   },
 };
 
-export default diskSchema;
+module.exports = { default: diskSchema };
