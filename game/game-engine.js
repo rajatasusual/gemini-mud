@@ -216,7 +216,7 @@ class GameEngine {
 
         this.player.pathTaken.push({ x: this.player.x, y: this.player.y }); // Add new position to pathTaken
         relayMessage(`You move ${direction}.\n`);
-        this.showPathTaken();
+        LOG && this.showPathTaken();
 
         await this.look(); // Automatically look around after moving
       }

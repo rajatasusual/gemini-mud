@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Game</title>
+  <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
 </head>
 
 <body>
@@ -23,16 +24,24 @@
     window.GoogleGenerativeAI = GoogleGenerativeAI;
     window.Ajv = window.ajv7;
 
-    window.API_KEY = "AIzaSyCpMEY1mrUcSDIKtFqI3M4Ssv80LCUfqyw";
+    window.API_KEY = "your_api_key_here";
 
     window.MAP_SIZE = 3;
     window.LOG = false;
     window.GENERATE = true;
   </script>
   <script src="dist/bundle.js" defer></script>
-  <div id="output"></div>
-  <input type="text" id="input" placeholder="Enter command">
-  
+
+  <div id="container">
+    <div id="chat">
+      <div id="messages"></div>
+      <input type="text" id="input" placeholder="Enter command">
+    </div>
+    <div id="map">
+      <!-- D3 canvas will be inserted here -->
+    </div>
+  </div>
+
 </body>
 
 </html>

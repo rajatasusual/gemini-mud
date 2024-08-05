@@ -5796,7 +5796,7 @@ var GameEngine = /*#__PURE__*/function () {
                 y: this.player.y
               }); // Add new position to pathTaken
               relayMessage("You move ".concat(direction, ".\n"));
-              this.showPathTaken();
+              LOG && this.showPathTaken();
               _context6.next = 26;
               return this.look();
             case 26:
@@ -49175,7 +49175,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 var GameMap = (__webpack_require__(/*! ./game/game-map.js */ "./game/game-map.js")["default"]);
 var GameEngine = (__webpack_require__(/*! ./game/game-engine.js */ "./game/game-engine.js")["default"]);
 var MAP_SIZE = window.MAP_SIZE ? window.MAP_SIZE : 5; // Adjust the map size as needed
-
+var LOG = window.LOG ? window.LOG : false;
 function watchVariable(obj, propName, callback) {
   var value = obj[propName];
   Object.defineProperty(obj, propName, {
@@ -49191,54 +49191,77 @@ function watchVariable(obj, propName, callback) {
     }
   });
 }
-function updateOutput(message) {
-  //update the output div
-  document.getElementById("output").innerHTML = message;
+function appendMessage(message) {
+  var messagesDiv = document.getElementById("messages");
+  var messageElement = document.createElement("div");
+  messageElement.textContent = message;
+  messagesDiv.appendChild(messageElement);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
 }
 function parseInput(input) {
   var parts = input.trim().split(" ");
   var cmd = parts[0];
-  var args = parts.slice(1);
+  var args = parts[1];
   return {
     cmd: cmd,
     args: args
   };
 }
 var run = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-    var gameMap, engine, message, input;
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) switch (_context.prev = _context.next) {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+    var gameMap, engine, input;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
         case 0:
           watchVariable(window, "message", function (newValue, oldValue) {
             if (newValue !== oldValue) {
-              updateOutput(newValue);
+              appendMessage(newValue);
             }
           });
           gameMap = new GameMap(MAP_SIZE);
-          _context.next = 4;
+          LOG && gameMap.display();
+          _context2.next = 5;
           return new GameEngine(gameMap);
-        case 4:
-          engine = _context.sent;
-          _context.next = 7;
+        case 5:
+          engine = _context2.sent;
+          _context2.t0 = appendMessage;
+          _context2.next = 9;
           return engine.look();
-        case 7:
-          message = _context.sent;
+        case 9:
+          _context2.t1 = _context2.sent;
+          (0, _context2.t0)(_context2.t1);
           input = document.getElementById("input");
-          input.addEventListener("keydown", function (event) {
-            if (event.key === "Enter") {
-              var _parseInput = parseInput(input.value),
-                cmd = _parseInput.cmd,
-                args = _parseInput.args;
-              engine.executeCommand(cmd, args);
-              input.value = "";
-            }
-          });
-        case 10:
+          input.addEventListener("keydown", /*#__PURE__*/function () {
+            var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
+              var _parseInput, cmd, args;
+              return _regeneratorRuntime().wrap(function _callee$(_context) {
+                while (1) switch (_context.prev = _context.next) {
+                  case 0:
+                    if (!(event.key === "Enter")) {
+                      _context.next = 6;
+                      break;
+                    }
+                    _parseInput = parseInput(input.value), cmd = _parseInput.cmd, args = _parseInput.args;
+                    _context.next = 4;
+                    return engine.executeCommand(cmd, args);
+                  case 4:
+                    input.value = "";
+                    LOG && gameMap.display();
+                  case 6:
+                  case "end":
+                    return _context.stop();
+                }
+              }, _callee);
+            }));
+            return function (_x) {
+              return _ref2.apply(this, arguments);
+            };
+          }());
+        case 13:
         case "end":
-          return _context.stop();
+          return _context2.stop();
       }
-    }, _callee);
+    }, _callee2);
   }));
   return function run() {
     return _ref.apply(this, arguments);
