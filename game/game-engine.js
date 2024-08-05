@@ -68,6 +68,7 @@ class GameEngine {
     if (this.gameMap.rooms[`${x},${y}`] === undefined) {
       // Generate the room
       const room = await this.roomGenerator.generateRoom(cellInfo);
+      this.updateIDs(room);
       const narration = await this.describer.describeRoom(room);
 
       room["narration"] = narration;
@@ -82,6 +83,58 @@ class GameEngine {
       }
       return null; // Or throw an error
     }
+  }
+
+
+  updateIDs(room) {
+    room._id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    for (let i = 0; i < room.exits.length; i++) {
+      room.exits[i]._id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
+  }
+
+  /**
+ * Generates nodes and links for D3 visualization.
+ * @return {Object} An object containing nodes and links arrays for D3.
+ */
+  generateD3Data() {
+    const nodes = [];
+    const links = [];
+    const nodeMap = new Map();
+    const nodeIdMap = new Map(); // Maps coordinate to node object for quick reference
+
+    // Function to add a node if it doesn't exist
+    const addNode = (room) => {
+      const id = room._id;
+      if (!nodeMap.has(id)) {
+        const node = { id, label: room.name };
+        nodeMap.set(id, node);
+        nodeIdMap.set(id, node);
+        nodes.push(node);
+      }
+    };
+
+    // Function to add a link if it doesn't exist
+    const addLink = (sourceRoom, targetRoom) => {
+      const sourceNode = nodeIdMap.get(sourceRoom._id);
+      const targetNode = nodeIdMap.get(targetRoom._id);
+      if (sourceNode && targetNode) {
+        links.push({ source: sourceNode.id, target: targetNode.id });
+      }
+    };
+
+    // Add nodes and links for the path taken
+    for (let i = 0; i < this.player.pathTaken.length; i++) {
+      const cell = this.player.pathTaken[i];
+      addNode(this.gameMap.rooms[`${cell.x},${cell.y}`]);
+
+      if (i > 0) {
+        const prevCell = this.player.pathTaken[i - 1];
+        addLink(this.gameMap.rooms[`${prevCell.x},${prevCell.y}`], this.gameMap.rooms[`${cell.x},${cell.y}`]);
+      }
+    }
+
+    return { nodes, links };
   }
 
   /**
@@ -205,20 +258,19 @@ class GameEngine {
           this.player.x--;
           break;
       }
+      // Generate the room if it hasn't been generated yet
+      if (!this.gameMap.rooms[`${this.player.x},${this.player.y}`] && GENERATE) {
+        await this.generateRoomAndUpdateMap(this.player.x, this.player.y);
+      }
+
+      this.player.pathTaken.push({ x: this.player.x, y: this.player.y }); // Add new position to pathTaken
+      relayMessage(`You move ${direction}.\n`);
+      LOG && this.showPathTaken();
+
+      await this.look(); // Automatically look around after moving
 
       if (this.player.x === this.gameMap.end.x && this.player.y === this.gameMap.end.y) {
         await this.endGame();
-      } else {
-        // Generate the room if it hasn't been generated yet
-        if (!this.gameMap.rooms[`${this.player.x},${this.player.y}`] && GENERATE) {
-          await this.generateRoomAndUpdateMap(this.player.x, this.player.y);
-        }
-
-        this.player.pathTaken.push({ x: this.player.x, y: this.player.y }); // Add new position to pathTaken
-        relayMessage(`You move ${direction}.\n`);
-        LOG && this.showPathTaken();
-
-        await this.look(); // Automatically look around after moving
       }
 
     } else {

@@ -5558,16 +5558,17 @@ var GameEngine = /*#__PURE__*/function () {
             case 0:
               cellInfo = this.gameMap.getCell(x, y);
               if (!(this.gameMap.rooms["".concat(x, ",").concat(y)] === undefined)) {
-                _context3.next = 13;
+                _context3.next = 14;
                 break;
               }
               _context3.next = 4;
               return this.roomGenerator.generateRoom(cellInfo);
             case 4:
               room = _context3.sent;
-              _context3.next = 7;
+              this.updateIDs(room);
+              _context3.next = 8;
               return this.describer.describeRoom(room);
-            case 7:
+            case 8:
               narration = _context3.sent;
               room["narration"] = narration;
 
@@ -5575,14 +5576,14 @@ var GameEngine = /*#__PURE__*/function () {
               this.gameMap.rooms["".concat(x, ",").concat(y)] = room;
               //update cellInfo
               cellInfo.room = room;
-              _context3.next = 15;
+              _context3.next = 16;
               break;
-            case 13:
+            case 14:
               if (LOG) {
                 relayMessage("Cell is already occupied.");
               }
               return _context3.abrupt("return", null);
-            case 15:
+            case 16:
             case "end":
               return _context3.stop();
           }
@@ -5592,13 +5593,74 @@ var GameEngine = /*#__PURE__*/function () {
         return _generateRoomAndUpdateMap.apply(this, arguments);
       }
       return generateRoomAndUpdateMap;
-    }()
+    }())
+  }, {
+    key: "updateIDs",
+    value: function updateIDs(room) {
+      room._id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      for (var i = 0; i < room.exits.length; i++) {
+        room.exits[i]._id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      }
+    }
+
+    /**
+    * Generates nodes and links for D3 visualization.
+    * @return {Object} An object containing nodes and links arrays for D3.
+    */
+  }, {
+    key: "generateD3Data",
+    value: function generateD3Data() {
+      var nodes = [];
+      var links = [];
+      var nodeMap = new Map();
+      var nodeIdMap = new Map(); // Maps coordinate to node object for quick reference
+
+      // Function to add a node if it doesn't exist
+      var addNode = function addNode(room) {
+        var id = room._id;
+        if (!nodeMap.has(id)) {
+          var node = {
+            id: id,
+            label: room.name
+          };
+          nodeMap.set(id, node);
+          nodeIdMap.set(id, node);
+          nodes.push(node);
+        }
+      };
+
+      // Function to add a link if it doesn't exist
+      var addLink = function addLink(sourceRoom, targetRoom) {
+        var sourceNode = nodeIdMap.get(sourceRoom._id);
+        var targetNode = nodeIdMap.get(targetRoom._id);
+        if (sourceNode && targetNode) {
+          links.push({
+            source: sourceNode.id,
+            target: targetNode.id
+          });
+        }
+      };
+
+      // Add nodes and links for the path taken
+      for (var i = 0; i < this.player.pathTaken.length; i++) {
+        var cell = this.player.pathTaken[i];
+        addNode(this.gameMap.rooms["".concat(cell.x, ",").concat(cell.y)]);
+        if (i > 0) {
+          var prevCell = this.player.pathTaken[i - 1];
+          addLink(this.gameMap.rooms["".concat(prevCell.x, ",").concat(prevCell.y)], this.gameMap.rooms["".concat(cell.x, ",").concat(cell.y)]);
+        }
+      }
+      return {
+        nodes: nodes,
+        links: links
+      };
+    }
+
     /**
      * Displays the path taken by the player on the game map using arrows.
      *
      * @return {void} This function does not return anything.
      */
-    )
   }, {
     key: "showPathTaken",
     value: function showPathTaken() {
@@ -5755,7 +5817,7 @@ var GameEngine = /*#__PURE__*/function () {
               // Check if the direction is valid and there's an exit
               exits = this.gameMap.getCell(this.player.x, this.player.y).exits;
               if (!exits[direction]) {
-                _context6.next = 28;
+                _context6.next = 26;
                 break;
               }
               _context6.t0 = direction;
@@ -5774,37 +5836,34 @@ var GameEngine = /*#__PURE__*/function () {
               this.player.x--;
               return _context6.abrupt("break", 13);
             case 13:
-              if (!(this.player.x === this.gameMap.end.x && this.player.y === this.gameMap.end.y)) {
-                _context6.next = 18;
+              if (!(!this.gameMap.rooms["".concat(this.player.x, ",").concat(this.player.y)] && GENERATE)) {
+                _context6.next = 16;
                 break;
               }
               _context6.next = 16;
-              return this.endGame();
-            case 16:
-              _context6.next = 26;
-              break;
-            case 18:
-              if (!(!this.gameMap.rooms["".concat(this.player.x, ",").concat(this.player.y)] && GENERATE)) {
-                _context6.next = 21;
-                break;
-              }
-              _context6.next = 21;
               return this.generateRoomAndUpdateMap(this.player.x, this.player.y);
-            case 21:
+            case 16:
               this.player.pathTaken.push({
                 x: this.player.x,
                 y: this.player.y
               }); // Add new position to pathTaken
               relayMessage("You move ".concat(direction, ".\n"));
               LOG && this.showPathTaken();
-              _context6.next = 26;
+              _context6.next = 21;
               return this.look();
-            case 26:
-              _context6.next = 29;
+            case 21:
+              if (!(this.player.x === this.gameMap.end.x && this.player.y === this.gameMap.end.y)) {
+                _context6.next = 24;
+                break;
+              }
+              _context6.next = 24;
+              return this.endGame();
+            case 24:
+              _context6.next = 27;
               break;
-            case 28:
+            case 26:
               relayMessage("You can't go that way.");
-            case 29:
+            case 27:
             case "end":
               return _context6.stop();
           }
@@ -6245,7 +6304,6 @@ module.exports = {
  * @typedef {Object} RoomSchema
  * @property {string} name - The name of the room.
  * @property {string} desc - The description of the room.
- * @property {string} _id - The ID of the room.
  * @property {Array<ExitSchema>} exits - The array of exits.
  * @property {Array<ItemSchema>} items - The array of items.
  * @property {string} onEnter - The event handler for entering the room.
@@ -6258,7 +6316,6 @@ module.exports = {
  *
  * @typedef {Object} ExitSchema
  * @property {string} dir - The direction of the exit.
- * @property {string} _id - The ID of the exit.
  * @property {string} desc - The description of the exit.
  * @property {string} block - The blocker of the exit.
  */
@@ -6318,9 +6375,6 @@ var diskSchema = {
           desc: {
             type: "string"
           },
-          _id: {
-            type: "string"
-          },
           exits: {
             type: "array",
             items: {
@@ -6330,9 +6384,6 @@ var diskSchema = {
                   type: "string",
                   "enum": ["north", "south", "east", "west"]
                 },
-                _id: {
-                  type: "string"
-                },
                 desc: {
                   type: "string"
                 },
@@ -6340,7 +6391,7 @@ var diskSchema = {
                   type: "string"
                 }
               },
-              required: ["dir", "_id", "desc"]
+              required: ["dir", "desc"]
             }
           },
           items: {
@@ -6379,7 +6430,7 @@ var diskSchema = {
             type: "string"
           }
         },
-        required: ["name", "desc", "exits", "_id", "onLook"]
+        required: ["name", "desc", "exits", "onLook"]
       }
     },
     inventory: {
@@ -49209,7 +49260,7 @@ function parseInput(input) {
 }
 var run = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-    var gameMap, engine, input;
+    var gameMap, engine, input, _engine$generateD3Dat2, nodes, links;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
@@ -49233,12 +49284,12 @@ var run = /*#__PURE__*/function () {
           input = document.getElementById("input");
           input.addEventListener("keydown", /*#__PURE__*/function () {
             var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-              var _parseInput, cmd, args;
+              var _parseInput, cmd, args, _engine$generateD3Dat, _nodes, _links;
               return _regeneratorRuntime().wrap(function _callee$(_context) {
                 while (1) switch (_context.prev = _context.next) {
                   case 0:
                     if (!(event.key === "Enter")) {
-                      _context.next = 6;
+                      _context.next = 10;
                       break;
                     }
                     _parseInput = parseInput(input.value), cmd = _parseInput.cmd, args = _parseInput.args;
@@ -49246,8 +49297,14 @@ var run = /*#__PURE__*/function () {
                     return engine.executeCommand(cmd, args);
                   case 4:
                     input.value = "";
+                    input.focus();
+
+                    // Generate D3 data and render the graph
+                    _engine$generateD3Dat = engine.generateD3Data(), _nodes = _engine$generateD3Dat.nodes, _links = _engine$generateD3Dat.links;
+                    console.log(_nodes, _links);
+                    GRAPH.updateVisualization(_nodes, _links);
                     LOG && gameMap.display();
-                  case 6:
+                  case 10:
                   case "end":
                     return _context.stop();
                 }
@@ -49257,7 +49314,11 @@ var run = /*#__PURE__*/function () {
               return _ref2.apply(this, arguments);
             };
           }());
-        case 13:
+
+          // Generate D3 data and render the graph
+          _engine$generateD3Dat2 = engine.generateD3Data(), nodes = _engine$generateD3Dat2.nodes, links = _engine$generateD3Dat2.links;
+          GRAPH.init(nodes, links);
+        case 15:
         case "end":
           return _context2.stop();
       }

@@ -58,10 +58,20 @@ const run = async () => {
       const { cmd, args } = parseInput(input.value);
       await engine.executeCommand(cmd, args);
       input.value = "";
+      input.focus();
+
+      // Generate D3 data and render the graph
+      const { nodes, links } = engine.generateD3Data();
+      console.log(nodes, links);
+      GRAPH.updateVisualization( nodes, links);
 
       LOG && gameMap.display();
     }
   });
+
+  // Generate D3 data and render the graph
+  const { nodes, links } = engine.generateD3Data();
+  GRAPH.init(nodes, links);
 };
 
 run();

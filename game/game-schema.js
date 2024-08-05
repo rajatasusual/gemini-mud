@@ -14,7 +14,6 @@
  * @typedef {Object} RoomSchema
  * @property {string} name - The name of the room.
  * @property {string} desc - The description of the room.
- * @property {string} _id - The ID of the room.
  * @property {Array<ExitSchema>} exits - The array of exits.
  * @property {Array<ItemSchema>} items - The array of items.
  * @property {string} onEnter - The event handler for entering the room.
@@ -27,7 +26,6 @@
  *
  * @typedef {Object} ExitSchema
  * @property {string} dir - The direction of the exit.
- * @property {string} _id - The ID of the exit.
  * @property {string} desc - The description of the exit.
  * @property {string} block - The blocker of the exit.
  */
@@ -87,9 +85,6 @@ const diskSchema = {
           desc: {
             type: "string",
           },
-          _id: {
-            type: "string",
-          },
           exits: {
             type: "array",
             items: {
@@ -99,9 +94,6 @@ const diskSchema = {
                   type: "string",
                   enum: ["north", "south", "east", "west"],
                 },
-                _id: {
-                  type: "string",
-                },
                 desc: {
                   type: "string",
                 },
@@ -109,7 +101,7 @@ const diskSchema = {
                   type: "string",
                 },
               },
-              required: ["dir", "_id", "desc"],
+              required: ["dir", "desc"],
             },
           },
           items: {
@@ -148,7 +140,7 @@ const diskSchema = {
             type: "string",
           },
         },
-        required: ["name", "desc", "exits", "_id", "onLook"],
+        required: ["name", "desc", "exits", "onLook"],
       },
     },
     inventory: {

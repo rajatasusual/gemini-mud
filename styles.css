@@ -33,9 +33,59 @@ body {
     border: 1px solid #ccc;
 }
 
+
 #map {
+    height: 100%;
     width: 50%;
+    display: flex;
+    overflow: hidden;
+}
+
+.hline {
+    stroke: #1A2A73;
+    stroke-width: 0.1px;
+}
+
+.vline {
+    stroke: #1A2A73;
+    stroke-width: 0.1px;
+}
+
+/* Style for the legend */
+.legend-text {
+    fill: #1A2A73;
+}
+
+/* Style for the node and link elements */
+
+.node {
+    fill: #3587A4;
+    stroke: #ACE2F9;
+    stroke-width: 2px;
+    cursor: pointer;
+    filter: drop-shadow(2px 2px 4px #3587A4);
+}
+
+.node text {
+    font: 10px sans-serif;
+    text-anchor: middle;
+    visibility: hidden;
+}
+
+.link {
+    stroke: #1A2A73;
+    stroke-opacity: 0.6;
+    stroke-width: 2px;
+}
+
+.tooltip {
+    position: absolute;
+    background-color: #ACE2F9;
+    color: #1A2A73;
     padding: 10px;
-    box-sizing: border-box;
-    position: relative;
+    border-radius: 10px;
+    pointer-events: none;
+    /* Ensures tooltip doesn't block mouse events on nodes */
+    display: none;
+    /* Hide tooltip by default */
 }
