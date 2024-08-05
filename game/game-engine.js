@@ -7,7 +7,20 @@ dotenv.config();
 const LOG = process.env.LOG === "true";
 const GENERATE = process.env.GENERATE === "true";
 
+/**
+ * GameEngine class implements the game logic.
+ *
+ * @class
+ * @author Rajat Kumar
+ * @see https://rajatasusual.github.io/gemini-mud/
+ */
 class GameEngine {
+/**
+ * Creates a new instance of the GameEngine class.
+ *
+ * @param {Object} gameMap - The game map object.
+ * @return {Promise<GameEngine>} A promise that resolves to the initialized GameEngine instance.
+ */
   constructor(gameMap) {
     this.gameMap = gameMap;
     this.roomGenerator = new RoomGenerator(); // Instantiate the RoomGenerator
@@ -19,6 +32,11 @@ class GameEngine {
     })();
   }
 
+/**
+ * Initializes the player object and generates the first room if GENERATE is true.
+ *
+ * @return {Promise<void>} A Promise that resolves when the initialization is complete.
+ */
   async init() {
     this.player = {
       x: this.gameMap.start.x,
@@ -34,6 +52,13 @@ class GameEngine {
     }
   }
 
+  /**
+   * Asynchronously generates a room at the specified coordinates and updates the game map.
+   *
+   * @param {number} x - The x-coordinate of the cell.
+   * @param {number} y - The y-coordinate of the cell.
+   * @return {Promise<void>} A promise that resolves when the room is generated and the game map is updated. Returns null if the cell is already occupied.
+   */
   async generateRoomAndUpdateMap(x, y) {
     const cellInfo = this.gameMap.getCell(x, y);
     if (this.gameMap.rooms[`${x},${y}`] === undefined) {
@@ -55,6 +80,11 @@ class GameEngine {
     }
   }
 
+  /**
+   * Displays the path taken by the player on the game map using arrows.
+   *
+   * @return {void} This function does not return anything.
+   */
   showPathTaken() {
     const map = Array.from({ length: this.gameMap.size }, () =>
       Array(this.gameMap.size).fill(" ")
@@ -86,6 +116,13 @@ class GameEngine {
   }
 
 
+  /**
+   * Executes a command based on the given command and argument.
+   *
+   * @param {string} command - The command to execute.
+   * @param {string} arg - The argument for the command.
+   * @return {Promise<void>} A promise that resolves when the command is executed.
+   */
   async executeCommand(command, arg) {
     switch (command) {
       case "look":
@@ -116,6 +153,11 @@ class GameEngine {
     }
   }
 
+  /**
+   * Get the current room based on player's position and display the room description.
+   *
+   * @return {void} This function does not return anything.
+   */
   async look() {
     // Get the current room based on player's position
     const currentRoom = this.gameMap.rooms[`${this.player.x},${this.player.y}`];
@@ -134,6 +176,12 @@ class GameEngine {
     console.log(currentRoom["narration"]);
   }
 
+  /**
+   * Move the player in the specified direction.
+   *
+   * @param {string} direction - The direction to move the player. Valid directions are "north", "south", "east", and "west".
+   * @return {Promise<void>} A promise that resolves when the player has moved or rejects if the direction is invalid.
+   */
   async move(direction) {
     // Check if the direction is valid and there's an exit
     const exits = this.gameMap.getCell(this.player.x, this.player.y).exits;
@@ -174,6 +222,12 @@ class GameEngine {
     }
   }
 
+/**
+ * Takes an item from the room and adds it to the player's inventory.
+ *
+ * @param {string} itemName - The name of the item to be taken.
+ * @return {void} This function does not return a value.
+ */
   takeItem(itemName) {
     // ... (implementation for picking up an item)
 
@@ -184,18 +238,40 @@ class GameEngine {
     // ... (remove item from the room)
   }
 
+  /**
+   * Use an item from the player's inventory.
+   *
+   * @param {string} itemName - The name of the item to be used.
+   * @return {void} This function does not return a value.
+   */
   useItem(itemName) {
     // ... (implementation for using an item from inventory)
   }
 
+  /**
+   * Interact with a non-player character (NPC) by their name.
+   *
+   * @param {string} npcName - The name of the NPC to interact with.
+   * @return {void} This function does not return a value.
+   */
   talkToNPC(npcName) {
     // ... (implementation for interacting with NPCs)
   }
 
+  /**
+   * Displays the player's inventory.
+   *
+   * @return {void} This function does not return a value.
+   */
   showInventory() {
     // ... (implementation for displaying player inventory)
   }
 
+  /**
+   * Ends the game by generating a journey description for the player's path taken and logging it.
+   *
+   * @return {Promise<void>} A promise that resolves when the game has ended and the player has been logged out.
+   */
   async endGame() {
     const roomsVisited = this.player.pathTaken.map(
       (pos) => this.gameMap.rooms[`${pos.x},${pos.y}`]
@@ -207,6 +283,11 @@ class GameEngine {
     this.quit();
   }
 
+  /**
+   * Logs a message and exits the game.
+   *
+   * @return {void} This function does not return a value.
+   */
   quit() {
     console.log("Thanks for playing!");
     process.exit(0); // Exit the game

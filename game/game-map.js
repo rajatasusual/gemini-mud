@@ -1,4 +1,13 @@
+/**
+ * Class representing a game map.
+ * @class
+ */
 class GameMap {
+  /**
+   * Constructs a new GameMap object.
+   *
+   * @param {number} size - The size of the game map.
+   */
   constructor(size) {
     this.size = size;
     this.start = { x: 0, y: Math.floor(Math.random() * size) };
@@ -9,6 +18,12 @@ class GameMap {
   }
 
 
+  /**
+   * Generates a random valid path from the start cell to the end cell.
+   *
+   * @param {number} [mapSize=this.size] - The size of the map. Defaults to the size of the current instance.
+   * @return {Array<Object>} The randomly generated win path.
+   */
   generateRandomWinPath(mapSize = this.size) {
     const startCell = this.start;
     const endCell = this.end;
@@ -31,6 +46,14 @@ class GameMap {
     return winPath;
   }
 
+  /**
+   * Generates dead-end paths branching off from the winning path.
+   *
+   * @param {Array} [winPath=this.winPath] - The winning path.
+   * @param {number} [mapSize=this.size] - The size of the map.
+   * @param {number} [maxDeadEndsPerBranch=2] - The maximum number of dead ends per branch.
+   * @return {Array} An array of dead-end paths.
+   */
   generateDeadEndPaths(winPath = this.winPath, mapSize = this.size, maxDeadEndsPerBranch = 2) {
     const deadEndPaths = [];
     const visited = new Set(winPath.map(cell => `${cell.x},${cell.y}`)); // Track visited cells
@@ -65,6 +88,14 @@ class GameMap {
     return deadEndPaths;
   }
 
+  /**
+   * Returns an array of valid moves for a given cell on a game map.
+   *
+   * @param {Object} cell - The current cell object with x and y coordinates.
+   * @param {number} mapSize - The size of the game map.
+   * @param {Array} winPath - An array of objects representing the winning path.
+   * @return {Array} An array of objects representing the valid moves.
+   */
   getValidMoves(cell, mapSize, winPath) {
     const moves = [];
     const directions = [
@@ -89,6 +120,11 @@ class GameMap {
 
     return moves;
   }
+  /**
+   * Display the map with the win path, dead end paths, start point, and end point.
+   *
+   * @return {void} This function does not return anything.
+   */
   display() {
     const map = Array.from({ length: this.size }, () => Array(this.size).fill(' '));
 
@@ -111,6 +147,13 @@ class GameMap {
     }
   }
 
+  /**
+   * Retrieves the cell at the specified coordinates.
+   *
+   * @param {number} x - The x-coordinate of the cell.
+   * @param {number} y - The y-coordinate of the cell.
+   * @return {Object|null} The cell object with its type and exits, or null if the coordinates are out of bounds.
+   */
   getCell(x, y) {
     if (x < 0 || x >= this.size || y < 0 || y >= this.size) {
       return null; // Out of bounds
@@ -131,6 +174,13 @@ class GameMap {
     };
   }
 
+  /**
+   * Returns the type of the cell at the given coordinates.
+   *
+   * @param {number} x - The x-coordinate of the cell.
+   * @param {number} y - The y-coordinate of the cell.
+   * @return {string} The type of the cell: 'win' if it is part of the winning path, 'deadend' if it is part of a dead-end path, 'start' if it is the starting cell, 'end' if it is the ending cell, or 'empty' if it is an empty cell.
+   */
   getCellType(x, y) {
     if (this.winPath.some(cell => cell.x === x && cell.y === y)) {
       return 'win';

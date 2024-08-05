@@ -9,7 +9,23 @@ dotenv.config();
 
 const LOG = process.env.LOG === "true";
 
+/**
+ * RoomGenerator class generates rooms for a MUD-style game using Generative AI.
+ *
+ * @class
+ * @author Rajat Kumar
+ * @see https://rajatasusual.github.io/gemini-mud/
+ */
 class RoomGenerator {
+  /**
+   * Constructs a new instance of the RoomGenerator class.
+   *
+   * Initializes the AJV validator with loose mode, sets up the schema for room items,
+   * and compiles the validator. Then, initializes the model and chat history for
+   * the Generative AI model.
+   *
+   * @return {void}
+   */
   constructor() {
     const ajv = new Ajv({ strict: false });
     this.schema = diskSchema.properties.rooms.items;
@@ -19,6 +35,11 @@ class RoomGenerator {
     this.chat = this.model.startChat({history: []});
   }
 
+  /**
+   * Returns a generative model for generating a room description in a MUD-style game.
+   *
+   * @return {Promise<GenerativeModel>} A promise that resolves to a generative model.
+   */
   getModel() {
     const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
@@ -46,6 +67,14 @@ class RoomGenerator {
     });
   }
 
+  /**
+   * Asynchronously generates a room description for a MUD-style game based on the provided cell information.
+   *
+   * @param {Object} cellInfo - An object containing information about the cell, including its type and exits.
+   * @param {string} cellInfo.type - The type of the cell.
+   * @param {Object.<string, boolean>} cellInfo.exits - An object representing the exits from the cell, where the keys are the directions and the values are boolean indicating whether there is an exit in that direction.
+   * @return {Promise<?Object>} A promise that resolves to the generated room description as a JSON object if it passes validation, or null if it fails validation or if there is an error.
+   */
   async generateRoom(cellInfo) {
     const prompt = `Generate a room description for a ${cellInfo.type} room in a MUD-style game. 
   

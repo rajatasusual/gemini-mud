@@ -5,7 +5,7 @@
   "description": "A MUD-style text adventure game powered by Google Gemini AI",
   "main": "game.js",
   "scripts": {
-    "start": "node game.js"
+    "start": "node game/start.js"
   },
   "keywords": ["mud", "text-adventure", "gemini-ai", "nodejs", "ai", "generative"],
   "author": "Rajat Kumar <rajatasusual.github.io>",
