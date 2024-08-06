@@ -5480,6 +5480,14 @@ var GameEngine = /*#__PURE__*/function () {
     this.gameMap = gameMap;
     this.roomGenerator = new RoomGenerator(); // Instantiate the RoomGenerator
     this.describer = new Describer();
+
+    // Initialize the nodes and links
+    this.nodes = [];
+    this.links = [];
+    this.nodeMap = new Map();
+    this.nodeIdMap = new Map(); // Maps coordinate to node object for quick reference
+
+    // Initialize the player and generate the first room if GENERATE is true
     return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
@@ -5593,7 +5601,14 @@ var GameEngine = /*#__PURE__*/function () {
         return _generateRoomAndUpdateMap.apply(this, arguments);
       }
       return generateRoomAndUpdateMap;
-    }())
+    }()
+    /**
+     * Generates unique IDs for the given room and its exits.
+     *
+     * @param {Object} room - The room object to update IDs for.
+     * @return {void} This function does not return a value.
+     */
+    )
   }, {
     key: "updateIDs",
     value: function updateIDs(room) {
@@ -5604,55 +5619,83 @@ var GameEngine = /*#__PURE__*/function () {
     }
 
     /**
-    * Generates nodes and links for D3 visualization.
-    * @return {Object} An object containing nodes and links arrays for D3.
-    */
+     * Adds a node to the node map if it does not already exist, and updates the node ID map and nodes array.
+     *
+     * @param {Object} room - The room object to add as a node.
+     * @return {Object|null} The added node object, or null if the node already exists.
+     */
+  }, {
+    key: "addNode",
+    value: function addNode(id) {
+      var room = this.gameMap.rooms[id];
+      if (!this.nodeMap.has(id)) {
+        var node = {
+          id: id,
+          label: room.name
+        };
+        this.nodeMap.set(id, node);
+        this.nodeIdMap.set(id, node);
+        this.nodes.push(node);
+        return node;
+      }
+      return null;
+    }
+  }, {
+    key: "addLink",
+    value:
+    /**
+     * Adds a link between two nodes in the graph.
+     *
+     * @param {Object} sourceRoom - The source room object.
+     * @param {Object} targetRoom - The target room object.
+     * @return {Object|null} The added link object, or null if the source or target nodes do not exist.
+     */
+    function addLink(sourceRoomLocation, targetRoomLocation) {
+      var sourceNode = this.nodeIdMap.get(sourceRoomLocation);
+      var targetNode = this.nodeIdMap.get(targetRoomLocation);
+      if (sourceNode && targetNode) {
+        var link = {
+          source: sourceNode.id,
+          target: targetNode.id
+        };
+        this.links.push(link);
+        return link;
+      }
+      return null;
+    }
   }, {
     key: "generateD3Data",
-    value: function generateD3Data() {
-      var nodes = [];
-      var links = [];
-      var nodeMap = new Map();
-      var nodeIdMap = new Map(); // Maps coordinate to node object for quick reference
-
-      // Function to add a node if it doesn't exist
-      var addNode = function addNode(room) {
-        var id = room._id;
-        if (!nodeMap.has(id)) {
-          var node = {
-            id: id,
-            label: room.name
-          };
-          nodeMap.set(id, node);
-          nodeIdMap.set(id, node);
-          nodes.push(node);
-        }
-      };
-
-      // Function to add a link if it doesn't exist
-      var addLink = function addLink(sourceRoom, targetRoom) {
-        var sourceNode = nodeIdMap.get(sourceRoom._id);
-        var targetNode = nodeIdMap.get(targetRoom._id);
-        if (sourceNode && targetNode) {
-          links.push({
-            source: sourceNode.id,
-            target: targetNode.id
-          });
-        }
-      };
-
+    value:
+    /**
+     * Generates D3 data based on the player's path taken.
+     *
+     * @param {boolean} [isNew=true] - Indicates whether the data is for a new game or not.
+     * @return {Object} - An object containing the generated D3 data. If `isNew` is false, the object contains the last node, link, and current node. Otherwise, it contains all nodes and links.
+     */
+    function generateD3Data() {
+      var isNew = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+      var node = {};
+      var link = {};
       // Add nodes and links for the path taken
       for (var i = 0; i < this.player.pathTaken.length; i++) {
         var cell = this.player.pathTaken[i];
-        addNode(this.gameMap.rooms["".concat(cell.x, ",").concat(cell.y)]);
+        node = this.addNode("".concat(cell.x, ",").concat(cell.y));
         if (i > 0) {
           var prevCell = this.player.pathTaken[i - 1];
-          addLink(this.gameMap.rooms["".concat(prevCell.x, ",").concat(prevCell.y)], this.gameMap.rooms["".concat(cell.x, ",").concat(cell.y)]);
+          link = this.addLink("".concat(prevCell.x, ",").concat(prevCell.y), "".concat(cell.x, ",").concat(cell.y));
         }
       }
+      if (!isNew) {
+        var currentNode = this.nodeMap.get("".concat(this.player.x, ",").concat(this.player.y));
+        return {
+          nodes: [node],
+          links: [link],
+          currentNode: currentNode
+        };
+      }
       return {
-        nodes: nodes,
-        links: links
+        nodes: this.nodes,
+        links: this.links
       };
     }
 
@@ -5698,51 +5741,56 @@ var GameEngine = /*#__PURE__*/function () {
     }
 
     /**
-     * Executes a command based on the given command and argument.
+     * Asynchronously executes a command based on the given command and argument.
      *
      * @param {string} command - The command to execute.
      * @param {string} arg - The argument for the command.
-     * @return {Promise<void>} A promise that resolves when the command is executed.
+     * @return {Promise<boolean>} A promise that resolves to a boolean indicating if the player moved or not.
      */
   }, {
     key: "executeCommand",
     value: (function () {
       var _executeCommand = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(command, arg) {
+        var moved;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
+              moved = false;
               _context4.t0 = command;
-              _context4.next = _context4.t0 === "look" ? 3 : _context4.t0 === "move" ? 6 : _context4.t0 === "go" ? 6 : _context4.t0 === "take" ? 9 : _context4.t0 === "use" ? 11 : _context4.t0 === "talk" ? 13 : _context4.t0 === "inventory" ? 15 : _context4.t0 === "quit" ? 17 : 19;
+              _context4.next = _context4.t0 === "look" ? 4 : _context4.t0 === "move" ? 7 : _context4.t0 === "go" ? 7 : _context4.t0 === "take" ? 11 : _context4.t0 === "use" ? 13 : _context4.t0 === "talk" ? 15 : _context4.t0 === "inventory" ? 17 : _context4.t0 === "quit" ? 19 : 21;
               break;
-            case 3:
-              _context4.next = 5;
+            case 4:
+              _context4.next = 6;
               return this.look();
-            case 5:
-              return _context4.abrupt("break", 21);
             case 6:
-              _context4.next = 8;
+              return _context4.abrupt("break", 23);
+            case 7:
+              _context4.next = 9;
               return this.move(arg);
-            case 8:
-              return _context4.abrupt("break", 21);
             case 9:
-              this.takeItem(arg);
-              return _context4.abrupt("break", 21);
+              moved = _context4.sent;
+              return _context4.abrupt("break", 23);
             case 11:
-              this.useItem(arg);
-              return _context4.abrupt("break", 21);
+              this.takeItem(arg);
+              return _context4.abrupt("break", 23);
             case 13:
-              this.talkToNPC(arg);
-              return _context4.abrupt("break", 21);
+              this.useItem(arg);
+              return _context4.abrupt("break", 23);
             case 15:
-              this.showInventory();
-              return _context4.abrupt("break", 21);
+              this.talkToNPC(arg);
+              return _context4.abrupt("break", 23);
             case 17:
-              this.quit();
-              return _context4.abrupt("break", 21);
+              this.showInventory();
+              return _context4.abrupt("break", 23);
             case 19:
-              relayMessage("Invalid command.");
-              return _context4.abrupt("break", 21);
+              this.quit();
+              return _context4.abrupt("break", 23);
             case 21:
+              relayMessage("Invalid command.");
+              return _context4.abrupt("break", 23);
+            case 23:
+              return _context4.abrupt("return", moved);
+            case 24:
             case "end":
               return _context4.stop();
           }
@@ -5803,7 +5851,7 @@ var GameEngine = /*#__PURE__*/function () {
      * Move the player in the specified direction.
      *
      * @param {string} direction - The direction to move the player. Valid directions are "north", "south", "east", and "west".
-     * @return {Promise<void>} A promise that resolves when the player has moved or rejects if the direction is invalid.
+     * @return {Promise<boolean>} A promise that resolves to true if the player moved successfully, or false if the direction is invalid.
      */
     )
   }, {
@@ -5817,7 +5865,7 @@ var GameEngine = /*#__PURE__*/function () {
               // Check if the direction is valid and there's an exit
               exits = this.gameMap.getCell(this.player.x, this.player.y).exits;
               if (!exits[direction]) {
-                _context6.next = 26;
+                _context6.next = 27;
                 break;
               }
               _context6.t0 = direction;
@@ -5859,11 +5907,11 @@ var GameEngine = /*#__PURE__*/function () {
               _context6.next = 24;
               return this.endGame();
             case 24:
-              _context6.next = 27;
-              break;
-            case 26:
-              relayMessage("You can't go that way.");
+              return _context6.abrupt("return", true);
             case 27:
+              relayMessage("You can't go that way.");
+              return _context6.abrupt("return", false);
+            case 29:
             case "end":
               return _context6.stop();
           }
@@ -49284,27 +49332,28 @@ var run = /*#__PURE__*/function () {
           input = document.getElementById("input");
           input.addEventListener("keydown", /*#__PURE__*/function () {
             var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-              var _parseInput, cmd, args, _engine$generateD3Dat, _nodes, _links;
+              var _parseInput, cmd, args, moved, _engine$generateD3Dat, _nodes, _links, currentNode;
               return _regeneratorRuntime().wrap(function _callee$(_context) {
                 while (1) switch (_context.prev = _context.next) {
                   case 0:
                     if (!(event.key === "Enter")) {
-                      _context.next = 10;
+                      _context.next = 9;
                       break;
                     }
                     _parseInput = parseInput(input.value), cmd = _parseInput.cmd, args = _parseInput.args;
                     _context.next = 4;
                     return engine.executeCommand(cmd, args);
                   case 4:
+                    moved = _context.sent;
                     input.value = "";
                     input.focus();
-
-                    // Generate D3 data and render the graph
-                    _engine$generateD3Dat = engine.generateD3Data(), _nodes = _engine$generateD3Dat.nodes, _links = _engine$generateD3Dat.links;
-                    console.log(_nodes, _links);
-                    GRAPH.updateVisualization(_nodes, _links);
+                    if (moved) {
+                      // Generate D3 data and render the graph
+                      _engine$generateD3Dat = engine.generateD3Data(false), _nodes = _engine$generateD3Dat.nodes, _links = _engine$generateD3Dat.links, currentNode = _engine$generateD3Dat.currentNode;
+                      GRAPH.updateVisualization(_nodes, _links, currentNode, false);
+                    }
                     LOG && gameMap.display();
-                  case 10:
+                  case 9:
                   case "end":
                     return _context.stop();
                 }
@@ -49316,7 +49365,7 @@ var run = /*#__PURE__*/function () {
           }());
 
           // Generate D3 data and render the graph
-          _engine$generateD3Dat2 = engine.generateD3Data(), nodes = _engine$generateD3Dat2.nodes, links = _engine$generateD3Dat2.links;
+          _engine$generateD3Dat2 = engine.generateD3Data(true), nodes = _engine$generateD3Dat2.nodes, links = _engine$generateD3Dat2.links;
           GRAPH.init(nodes, links);
         case 15:
         case "end":

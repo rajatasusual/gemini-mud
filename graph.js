@@ -34,7 +34,7 @@ const GRAPH = {
   },
 
   init: (nodes, links) => {
-    
+
     startNode = nodes[0];
 
     GRAPH.resetState();
@@ -186,51 +186,51 @@ const GRAPH = {
   },
 
   updateVisualization: (nodes, links, currentNode, isNew = true) => {
-  // Combine existing nodes and links with new ones if not a new graph
-  if (!isNew) {
-    links = LINK.data().concat(links);
-    nodes = NODE.data().concat(nodes);
-  }
+    // Combine existing nodes and links with new ones if not a new graph
+    if (!isNew) {
+      links = LINK.data().concat(links);
+      nodes = NODE.data().concat(nodes);
+    }
 
-  // Bind data to links and update the links
-  LINK = LINK.data(links);
-  LINK.exit().remove();
-  LINK = LINK.enter().append("line")
-    .attr("class", "link")
-    .merge(LINK);
+    // Bind data to links and update the links
+    LINK = LINK.data(links);
+    LINK.exit().remove();
+    LINK = LINK.enter().append("line")
+      .attr("class", "link")
+      .merge(LINK);
 
-  // Bind data to nodes
-  NODE = NODE.data(nodes, d => d.id);
-  NODE.exit().remove();
-  
-  // Enter new nodes and assign classes for start and current nodes
-  NODE = NODE.enter().append("g")
-    .attr("class", d => `node ${d.id === startNode.id ? 'startNode' : ''} ${d.id === currentNode.id ? 'currentNode' : ''}`)
-    .call(d3.drag()
-      .on("start", GRAPH.dragEvents.dragstarted)
-      .on("drag", GRAPH.dragEvents.dragged)
-      .on("end", GRAPH.dragEvents.dragended))
-    .merge(NODE);
+    // Bind data to nodes
+    NODE = NODE.data(nodes, d => d.id);
+    NODE.exit().remove();
 
-  // Update existing nodes' classes based on their id
-  NODE.attr("class", d => `node ${d.id === startNode.id ? 'startNode' : ''} ${d.id === currentNode.id ? 'currentNode' : ''}`);
+    // Enter new nodes and assign classes for start and current nodes
+    NODE = NODE.enter().append("g")
+      .attr("class", d => `node ${d.id === startNode.id ? 'startNode' : ''} ${d.id === currentNode.id ? 'currentNode' : ''}`)
+      .call(d3.drag()
+        .on("start", GRAPH.dragEvents.dragstarted)
+        .on("drag", GRAPH.dragEvents.dragged)
+        .on("end", GRAPH.dragEvents.dragended))
+      .merge(NODE);
 
-  // Remove and append circles to nodes
-  NODE.selectAll("circle").remove();
-  NODE.append("circle")
-    .attr("r", 20)
-    .on("mouseover", GRAPH.mouseEvents.handleMouseOver)
-    .on("mouseout", GRAPH.mouseEvents.handleMouseOut);
+    // Update existing nodes' classes based on their id
+    NODE.attr("class", d => `node ${d.id === startNode.id ? 'startNode' : ''} ${d.id === currentNode.id ? 'currentNode' : ''}`);
 
-  // Update simulation nodes and links
-  SIMULATION.nodes(nodes);
-  SIMULATION.force("link").links(links);
+    // Remove and append circles to nodes
+    NODE.selectAll("circle").remove();
+    NODE.append("circle")
+      .attr("r", 20)
+      .on("mouseover", GRAPH.mouseEvents.handleMouseOver)
+      .on("mouseout", GRAPH.mouseEvents.handleMouseOut);
 
-  // Restart simulation if not a new graph
-  if (!isNew) {
-    SIMULATION.alphaTarget(0.3).restart();
-  }
-},
+    // Update simulation nodes and links
+    SIMULATION.nodes(nodes);
+    SIMULATION.force("link").links(links);
+
+    // Restart simulation if not a new graph
+    if (!isNew) {
+      SIMULATION.alphaTarget(0.3).restart();
+    }
+  },
 
   resetState: function () {
     tooltip = d3.select('body').append('div')
