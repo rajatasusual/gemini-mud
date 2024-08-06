@@ -158,8 +158,8 @@ class GameEngine {
    * @return {Object} - An object containing the generated D3 data. If `isNew` is false, the object contains the last node, link, and current node. Otherwise, it contains all nodes and links.
    */
   generateD3Data(isNew = true) {
-    let node = {};
-    let link = {};
+    let node = null;
+    let link = null;
     // Add nodes and links for the path taken
     for (let i = 0; i < this.player.pathTaken.length; i++) {
       const cell = this.player.pathTaken[i];
@@ -174,7 +174,7 @@ class GameEngine {
     if (!isNew) {
       const currentNode = this.nodeMap.get(`${this.player.x},${this.player.y}`);
 
-      return { nodes: [node], links: [link], currentNode };
+      return { nodes: [node == null ? currentNode : node], links: [link], currentNode };
     }
 
     return { nodes: this.nodes, links: this.links };

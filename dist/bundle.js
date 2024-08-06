@@ -5674,8 +5674,8 @@ var GameEngine = /*#__PURE__*/function () {
      */
     function generateD3Data() {
       var isNew = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-      var node = {};
-      var link = {};
+      var node = null;
+      var link = null;
       // Add nodes and links for the path taken
       for (var i = 0; i < this.player.pathTaken.length; i++) {
         var cell = this.player.pathTaken[i];
@@ -5688,7 +5688,7 @@ var GameEngine = /*#__PURE__*/function () {
       if (!isNew) {
         var currentNode = this.nodeMap.get("".concat(this.player.x, ",").concat(this.player.y));
         return {
-          nodes: [node],
+          nodes: [node == null ? currentNode : node],
           links: [link],
           currentNode: currentNode
         };
