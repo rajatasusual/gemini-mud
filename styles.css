@@ -66,6 +66,13 @@ body {
     filter: drop-shadow(2px 2px 4px #3587A4);
 }
 
+.startNode {
+    fill: #F9E358;
+}
+.currentNode {
+    stroke: #F9E358;
+}
+
 .node text {
     font: 10px sans-serif;
     text-anchor: middle;

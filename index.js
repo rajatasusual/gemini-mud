@@ -56,21 +56,23 @@ const run = async () => {
   input.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
       const { cmd, args } = parseInput(input.value);
-      await engine.executeCommand(cmd, args);
+      const moved = await engine.executeCommand(cmd, args);
       input.value = "";
       input.focus();
 
-      // Generate D3 data and render the graph
-      const { nodes, links } = engine.generateD3Data();
-      console.log(nodes, links);
-      GRAPH.updateVisualization( nodes, links);
+      if (moved) {
+        // Generate D3 data and render the graph
+        const { nodes, links, currentNode } = engine.generateD3Data(false);
+        GRAPH.updateVisualization(nodes, links, currentNode, false);
+      }
 
       LOG && gameMap.display();
     }
   });
 
   // Generate D3 data and render the graph
-  const { nodes, links } = engine.generateD3Data();
+  const { nodes, links } = engine.generateD3Data(true);
+ 
   GRAPH.init(nodes, links);
 };
 

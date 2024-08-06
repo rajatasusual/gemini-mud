@@ -29,11 +29,22 @@ class GameEngine {
     this.gameMap = gameMap;
     this.roomGenerator = new RoomGenerator(); // Instantiate the RoomGenerator
     this.describer = new Describer();
+
+    // Initialize the nodes and links
+    this.nodes = [];
+    this.links = [];
+    this.nodeMap = new Map();
+    this.nodeIdMap = new Map(); // Maps coordinate to node object for quick reference
+
+    // Initialize the player and generate the first room if GENERATE is true
     return (async () => {
       await this.init();
 
       return this;
     })();
+
+
+
   }
 
   /**
@@ -86,6 +97,12 @@ class GameEngine {
   }
 
 
+  /**
+   * Generates unique IDs for the given room and its exits.
+   *
+   * @param {Object} room - The room object to update IDs for.
+   * @return {void} This function does not return a value.
+   */
   updateIDs(room) {
     room._id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     for (let i = 0; i < room.exits.length; i++) {
@@ -93,48 +110,74 @@ class GameEngine {
     }
   }
 
+
   /**
- * Generates nodes and links for D3 visualization.
- * @return {Object} An object containing nodes and links arrays for D3.
- */
-  generateD3Data() {
-    const nodes = [];
-    const links = [];
-    const nodeMap = new Map();
-    const nodeIdMap = new Map(); // Maps coordinate to node object for quick reference
+   * Adds a node to the node map if it does not already exist, and updates the node ID map and nodes array.
+   *
+   * @param {Object} room - The room object to add as a node.
+   * @return {Object|null} The added node object, or null if the node already exists.
+   */
+  addNode(id) {
+    const room = this.gameMap.rooms[id];
+    if (!this.nodeMap.has(id)) {
+      const node = { id, label: room.name };
+      this.nodeMap.set(id, node);
+      this.nodeIdMap.set(id, node);
+      this.nodes.push(node);
+      return node;
+    }
 
-    // Function to add a node if it doesn't exist
-    const addNode = (room) => {
-      const id = room._id;
-      if (!nodeMap.has(id)) {
-        const node = { id, label: room.name };
-        nodeMap.set(id, node);
-        nodeIdMap.set(id, node);
-        nodes.push(node);
-      }
-    };
+    return null;
+  };
 
-    // Function to add a link if it doesn't exist
-    const addLink = (sourceRoom, targetRoom) => {
-      const sourceNode = nodeIdMap.get(sourceRoom._id);
-      const targetNode = nodeIdMap.get(targetRoom._id);
-      if (sourceNode && targetNode) {
-        links.push({ source: sourceNode.id, target: targetNode.id });
-      }
-    };
+  /**
+   * Adds a link between two nodes in the graph.
+   *
+   * @param {Object} sourceRoom - The source room object.
+   * @param {Object} targetRoom - The target room object.
+   * @return {Object|null} The added link object, or null if the source or target nodes do not exist.
+   */
+  addLink(sourceRoomLocation, targetRoomLocation) {
+    
+    const sourceNode = this.nodeIdMap.get(sourceRoomLocation);
+    const targetNode = this.nodeIdMap.get(targetRoomLocation);
+    if (sourceNode && targetNode) {
+      const link = { source: sourceNode.id, target: targetNode.id };
+      this.links.push(link);
+      return link;
+    }
 
+    return null;
+  };
+
+
+  /**
+   * Generates D3 data based on the player's path taken.
+   *
+   * @param {boolean} [isNew=true] - Indicates whether the data is for a new game or not.
+   * @return {Object} - An object containing the generated D3 data. If `isNew` is false, the object contains the last node, link, and current node. Otherwise, it contains all nodes and links.
+   */
+  generateD3Data(isNew = true) {
+    let node = {};
+    let link = {};
     // Add nodes and links for the path taken
     for (let i = 0; i < this.player.pathTaken.length; i++) {
       const cell = this.player.pathTaken[i];
-      addNode(this.gameMap.rooms[`${cell.x},${cell.y}`]);
+      node = this.addNode(`${cell.x},${cell.y}`);
 
       if (i > 0) {
         const prevCell = this.player.pathTaken[i - 1];
-        addLink(this.gameMap.rooms[`${prevCell.x},${prevCell.y}`], this.gameMap.rooms[`${cell.x},${cell.y}`]);
+        link = this.addLink(`${prevCell.x},${prevCell.y}`, `${cell.x},${cell.y}`);
       }
     }
 
-    return { nodes, links };
+    if (!isNew) {
+      const currentNode = this.nodeMap.get(`${this.player.x},${this.player.y}`);
+
+      return { nodes: [node], links: [link], currentNode };
+    }
+
+    return { nodes: this.nodes, links: this.links };
   }
 
   /**
@@ -173,21 +216,23 @@ class GameEngine {
   }
 
 
+  
   /**
-   * Executes a command based on the given command and argument.
+   * Asynchronously executes a command based on the given command and argument.
    *
    * @param {string} command - The command to execute.
    * @param {string} arg - The argument for the command.
-   * @return {Promise<void>} A promise that resolves when the command is executed.
+   * @return {Promise<boolean>} A promise that resolves to a boolean indicating if the player moved or not.
    */
   async executeCommand(command, arg) {
+    let moved = false;
     switch (command) {
       case "look":
         await this.look();
         break;
       case "move":
       case "go":
-        await this.move(arg);
+        moved = await this.move(arg);
         break;
       case "take":
         this.takeItem(arg);
@@ -208,6 +253,8 @@ class GameEngine {
         relayMessage("Invalid command.");
         break;
     }
+
+    return moved;
   }
 
   /**
@@ -233,12 +280,13 @@ class GameEngine {
     relayMessage(currentRoom["narration"]);
   }
 
-  /**
-   * Move the player in the specified direction.
-   *
-   * @param {string} direction - The direction to move the player. Valid directions are "north", "south", "east", and "west".
-   * @return {Promise<void>} A promise that resolves when the player has moved or rejects if the direction is invalid.
-   */
+
+    /**
+     * Move the player in the specified direction.
+     *
+     * @param {string} direction - The direction to move the player. Valid directions are "north", "south", "east", and "west".
+     * @return {Promise<boolean>} A promise that resolves to true if the player moved successfully, or false if the direction is invalid.
+     */
   async move(direction) {
     // Check if the direction is valid and there's an exit
     const exits = this.gameMap.getCell(this.player.x, this.player.y).exits;
@@ -273,8 +321,11 @@ class GameEngine {
         await this.endGame();
       }
 
+      return true;
     } else {
       relayMessage("You can't go that way.");
+
+      return false;
     }
   }
 
