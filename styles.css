@@ -1,14 +1,35 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Trebuchet MS', sans-serif;
     display: flex;
     height: 100vh;
+    background: linear-gradient(-45deg, #141E30, #598dc9);
+    color: #FFFFFF;
+    animation: gradient 15s ease infinite;
+    background-size: 400% 400%;
+    transition: background 2s ease-in-out;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 #container {
     display: flex;
     width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
 }
 
 #chat {
@@ -17,22 +38,38 @@ body {
     flex-direction: column;
     border-right: 1px solid #ccc;
     padding: 10px;
-    box-sizing: border-box;
 }
 
 #messages {
     flex: 1;
     overflow-y: auto;
     margin-bottom: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+#inputContainer {
+    display: flex;
 }
 
 #input {
     width: 100%;
-    padding: 10px;
+    padding: 15px;
     box-sizing: border-box;
     border: 1px solid #ccc;
+    background: #2C3E50;
+    color: #FFF;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: all 0.3s;
 }
 
+#input:focus {
+    outline: none;
+    border-color: #3498DB;
+}
 
 #map {
     height: 100%;
@@ -41,22 +78,15 @@ body {
     overflow: hidden;
 }
 
-.hline {
-    stroke: #1A2A73;
-    stroke-width: 0.1px;
-}
-
+.hline,
 .vline {
-    stroke: #1A2A73;
+    stroke: #ccc;
     stroke-width: 0.1px;
 }
 
-/* Style for the legend */
 .legend-text {
-    fill: #1A2A73;
+    fill: #FFFFFF;
 }
-
-/* Style for the node and link elements */
 
 .node {
     fill: #3587A4;
@@ -69,6 +99,7 @@ body {
 .startNode {
     fill: #F9E358;
 }
+
 .currentNode {
     stroke: #F9E358;
 }
@@ -80,9 +111,14 @@ body {
 }
 
 .link {
-    stroke: #1A2A73;
+    stroke: #ACE2F9;
     stroke-opacity: 0.6;
     stroke-width: 2px;
+    transition: stroke-width 0.3s;
+}
+
+.link:hover {
+    stroke-width: 3px;
 }
 
 .tooltip {
@@ -92,7 +128,24 @@ body {
     padding: 10px;
     border-radius: 10px;
     pointer-events: none;
-    /* Ensures tooltip doesn't block mouse events on nodes */
     display: none;
-    /* Hide tooltip by default */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+#messages {
+    scroll-behavior: smooth;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.message {
+    animation: fadeIn 1s;
 }

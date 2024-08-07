@@ -1,4 +1,5 @@
 const Describer = require("./describer.js").default;
+const Designer = require("./designer.js").default;
 const relayMessage = require("./logger").default;
 const RoomGenerator = require("./room-generator.js").default;
 
@@ -29,6 +30,7 @@ class GameEngine {
     this.gameMap = gameMap;
     this.roomGenerator = new RoomGenerator(); // Instantiate the RoomGenerator
     this.describer = new Describer();
+    this.designer = new Designer();
 
     // Initialize the nodes and links
     this.nodes = [];
@@ -81,8 +83,10 @@ class GameEngine {
       const room = await this.roomGenerator.generateRoom(cellInfo);
       this.updateIDs(room);
       const narration = await this.describer.describeRoom(room);
-
       room["narration"] = narration;
+      const ambience = await this.designer.DesignRoom(narration);
+
+      room["ambience"] = ambience;
 
       // Update the gameMap
       this.gameMap.rooms[`${x},${y}`] = room;
@@ -138,7 +142,7 @@ class GameEngine {
    * @return {Object|null} The added link object, or null if the source or target nodes do not exist.
    */
   addLink(sourceRoomLocation, targetRoomLocation) {
-    
+
     const sourceNode = this.nodeIdMap.get(sourceRoomLocation);
     const targetNode = this.nodeIdMap.get(targetRoomLocation);
     if (sourceNode && targetNode) {
@@ -216,7 +220,7 @@ class GameEngine {
   }
 
 
-  
+
   /**
    * Asynchronously executes a command based on the given command and argument.
    *
@@ -278,15 +282,16 @@ class GameEngine {
 
     // Display room description (you might need to parse JSON here)
     relayMessage(currentRoom["narration"]);
+    relayMessage(currentRoom["ambience"])
   }
 
 
-    /**
-     * Move the player in the specified direction.
-     *
-     * @param {string} direction - The direction to move the player. Valid directions are "north", "south", "east", and "west".
-     * @return {Promise<boolean>} A promise that resolves to true if the player moved successfully, or false if the direction is invalid.
-     */
+  /**
+   * Move the player in the specified direction.
+   *
+   * @param {string} direction - The direction to move the player. Valid directions are "north", "south", "east", and "west".
+   * @return {Promise<boolean>} A promise that resolves to true if the player moved successfully, or false if the direction is invalid.
+   */
   async move(direction) {
     // Check if the direction is valid and there's an exit
     const exits = this.gameMap.getCell(this.player.x, this.player.y).exits;

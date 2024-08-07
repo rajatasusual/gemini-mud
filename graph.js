@@ -7,7 +7,7 @@ let mouse_x = 0, mouse_y = 0;
 let zoom_level = 0.5;
 
 let SIMULATION = null;
-let force = false;
+let force = true;
 let NODE, LINK;
 
 let startNode = null;
@@ -78,7 +78,8 @@ const GRAPH = {
     SVG.selectAll(".legend").remove();
     const legendDetails = [
       ["node", "Rooms"],
-      ["link", "Paths"]
+      ["startNode node", "Start Room"],
+      ["currentNode node", "Current Room"]
     ];
 
     const rect = SVG.append("g")
