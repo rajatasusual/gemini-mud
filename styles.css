@@ -2,13 +2,16 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Trebuchet MS', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
     display: flex;
+    flex-direction: column;
     height: 100vh;
     background: linear-gradient(-45deg, #141E30, #598dc9);
     color: #FFFFFF;
     animation: gradient 15s ease infinite;
     background-size: 400% 400%;
-    transition: background 2s ease-in-out;
+    transition: background 2s ease-in-out; /* Added transition for smooth background change */
 }
 
 @keyframes gradient {
@@ -25,57 +28,74 @@ body {
     }
 }
 
+/* ...rest of your CSS... */
+
 #container {
     display: flex;
+    flex-direction: column;
     width: 100%;
+    height: 100%;
     box-sizing: border-box;
     padding: 20px;
 }
 
 #chat {
-    width: 50%;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid #ccc;
     padding: 10px;
 }
 
 #messages {
     flex: 1;
     overflow-y: auto;
-    margin-bottom: 10px;
     padding: 10px;
     background: rgba(0, 0, 0, 0.25);
     border-radius: 5px;
     transition: all 0.3s;
 }
 
+#map {
+    height: 50%;
+    display: flex;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+#graph {
+    width: 100%;
+    height: 100%;
+}
+
 #inputContainer {
     display: flex;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.75);
 }
 
 #input {
     width: 100%;
     padding: 15px;
+    margin: 20px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     background: #2C3E50;
     color: #FFF;
     border-radius: 5px;
-    margin-top: 10px;
     transition: all 0.3s;
+    animation: glowing 5s linear infinite;
+}
+
+@keyframes glowing {
+    0% { border-color: #3498DB; box-shadow: 0 0 5px #3498DB; }
+    50% { border-color: #2980B9; box-shadow: 0 0 20px #2980B9; }
+    100% { border-color: #3498DB; box-shadow: 0 0 5px #3498DB; }
 }
 
 #input:focus {
     outline: none;
-    border-color: #3498DB;
-}
-
-#map {
-    height: 100%;
-    width: 50%;
-    display: flex;
-    overflow: hidden;
 }
 
 .hline,
@@ -132,10 +152,6 @@ body {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 
-#messages {
-    scroll-behavior: smooth;
-}
-
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -148,4 +164,8 @@ body {
 
 .message {
     animation: fadeIn 1s;
+}
+
+#messages {
+    scroll-behavior: smooth;
 }

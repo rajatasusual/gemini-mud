@@ -5541,38 +5541,6 @@ var Designer = /*#__PURE__*/function () {
         return _DesignRoom.apply(this, arguments);
       }
       return DesignRoom;
-    }()
-    /**
-     * Asynchronously generates a short, narrative summary of a player's journey through the given rooms in a MUD-style game.
-     *
-     * @param {Array<Object>} rooms - A JSON representation of the rooms in the journey.
-     * @return {Promise<string>} A promise that resolves to the generated narrative summary text.
-     */
-    )
-  }, {
-    key: "describeJourney",
-    value: (function () {
-      var _describeJourney = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(rooms) {
-        var prompt, response;
-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
-            case 0:
-              prompt = "\n      Create a short, narrative summary of a player's journey through the following rooms in a MUD-style game, leading up to a satisfying conclusion. Highlight key moments, challenges overcome, and discoveries made.\n\n      ```json\n      ".concat(JSON.stringify(rooms, null, 2), "\n      ```\n      ");
-              _context2.next = 3;
-              return this.model.generateContent(prompt);
-            case 3:
-              response = _context2.sent;
-              return _context2.abrupt("return", response.response.text());
-            case 5:
-            case "end":
-              return _context2.stop();
-          }
-        }, _callee2, this);
-      }));
-      function describeJourney(_x2) {
-        return _describeJourney.apply(this, arguments);
-      }
-      return describeJourney;
     }())
   }]);
 }();

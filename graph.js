@@ -1,10 +1,10 @@
 let SVG = null;
-let SVGWidth = window.innerWidth / 2;
-let SVGHeight = window.innerHeight;
+let SVGWidth = window.innerWidth;
+let SVGHeight = window.innerHeight/2;
 const gridSize = 20; // Size of each grid cell
 
 let mouse_x = 0, mouse_y = 0;
-let zoom_level = 0.5;
+let zoom_level = 0.8;
 
 let SIMULATION = null;
 let force = true;
@@ -45,8 +45,8 @@ const GRAPH = {
   },
 
   updateSVGSize: () => {
-    SVGWidth = (window.innerWidth / 2) - 50;
-    SVGHeight = window.innerHeight;
+    SVGWidth = (window.innerWidth) - 50;
+    SVGHeight = window.innerHeight/2;
     SVG.attr("width", SVGWidth).attr("height", SVGHeight);
     GRAPH.addLegend();
     SIMULATION.force("center", d3.forceCenter(SVGWidth / 2, SVGHeight / 2));
@@ -135,7 +135,8 @@ const GRAPH = {
       .attr("x1", 0)
       .attr("y1", d => d * gridSize * zoom_level)
       .attr("x2", SVGWidth)
-      .attr("y2", d => d * gridSize * zoom_level);
+      .attr("y2", d => d * gridSize * zoom_level)
+      .style("stroke-opacity", d => 0.4 + (d / numCellsY) * 0.6); // Adjust opacity gradually
 
     gridlines.selectAll(".vline")
       .data(d3.range(numCellsX))
@@ -145,7 +146,8 @@ const GRAPH = {
       .attr("x1", d => d * gridSize * zoom_level)
       .attr("y1", 0)
       .attr("x2", d => d * gridSize * zoom_level)
-      .attr("y2", SVGHeight);
+      .attr("y2", SVGHeight)
+      .style("stroke-opacity", d => 0.4 + (d / numCellsX) * 0.6); // Adjust opacity gradually
   },
 
   initZoom: (linkGroup, nodeGroup) => {
