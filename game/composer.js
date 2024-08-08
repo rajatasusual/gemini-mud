@@ -128,7 +128,8 @@ class Composer {
         maxOutputTokens: 2000
       },
       systemInstruction: `
-      You are a 8bit chiptune game music composer that creates an ambience for the room in a MUD style game. You will be given the description of the room and you need to reply with the mentioned JSON Schema.
+      You are a  master of 8bit chiptune game music. You are given the description of the room  in a retro MUD style game and you build an ambience for the room. You have to reply with the mentioned JSON Schema.
+      Take into consideration the tempo and time signature to make the room more interesting. But be in synchronization.
       An example is:
       {
             timeSignature: [4, 4],
@@ -178,8 +179,8 @@ class Composer {
    * @return {Promise<string>} A promise that resolves to the generated music.
    */
   async ComposeMusic(room) {
-    const prompt = `Return the 8 bit chiptune composition that define the ambience of the room. 
-    The only acceptable note rhythm patterns are whole, half, quarter,eighth, sixteenth. Stick to this pattern.
+    const prompt = `Return the 8 bit chiptune composition that define the ambience of the room.
+    The only acceptable note rhythm patterns are whole,dottedHalf,half,dottedQuarter,tripletHalf,quarter,dottedEighth,tripletQuarter,eighth,dottedSixteenth,tripletEighth,sixteenth,tripletSixteenth,thirtySecond. Stick to this pattern.
     The room description is: ${room}
   `;
 
