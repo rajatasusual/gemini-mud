@@ -306,7 +306,6 @@ class GameEngine {
 
   changeAmbience(gradientColors) {
     const gradientString = `linear-gradient(-45deg, ${gradientColors.join(', ')})`;
-    document.body.style.transition = 'background 5s ease-in-out';
     document.body.style.background = gradientString;
     document.body.style.backgroundSize = '400% 400%'; // Ensure animation works
 
@@ -324,6 +323,8 @@ class GameEngine {
 
   playMusic(music) {
     try {
+      this.musicPlayer && this.musicPlayer.stop(true);
+      
       this.musicPlayer = this.conductor.load(music);
       this.musicPlayer.loop(true);
 

@@ -39,6 +39,63 @@ body {
     padding: 20px;
 }
 
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it's on top of other content */
+    opacity: 0; /* Start with hidden state */
+    pointer-events: none; /* Prevent interaction when hidden */
+    transition: opacity 0.5s ease; /* Transition effect */
+}
+
+.loading-screen.show {
+    opacity: 1; /* Visible state */
+    pointer-events: auto; /* Allow interaction when visible */
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: heartbeat 1.5s infinite; /* Apply heartbeat animation */
+}
+
+.spinner-image {
+    width: 40px; /* Adjust as needed */
+    height: 40px; /* Adjust as needed */
+    position: absolute;
+    z-index: 1; /* Ensure image is on top */
+}
+
+/* Heartbeat animation */
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.1);
+    }
+    50% {
+        transform: scale(1);
+    }
+    75% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
 #chat {
     flex: 1;
     display: flex;
@@ -97,7 +154,6 @@ body {
 
 .switches {
     display: flex;
-    padding: 15px;
 }
 
 /* Hide default checkbox */
@@ -108,14 +164,14 @@ body {
 /* Style checkbox container */
 .switch-label {
     cursor: pointer;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 24px;
-    height: 24px;
-    background-color: #FFF;
-    border-radius: 50%;
-    padding: 8px;
+    width: 100%;
+    padding: 15px;
+    margin: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    background: #2C3E50;
+    color: #FFF;
+    border-radius: 5px;
 }
 
 /* Style the Font Awesome icon */
@@ -126,7 +182,7 @@ body {
 
 /* Change icon color when checkbox is checked */
 .switch:checked+.switch-label i {
-    color: #3498DB;
+    color: #F9E358;
     /* Adjust color */
 }
 

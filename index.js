@@ -32,6 +32,25 @@ function watchVariable(obj, propName, callback) {
   });
 }
 
+function showLoadingScreen() {
+  const loadingScreen = document.getElementById("loading-screen");
+  loadingScreen.classList.remove("hidden"); // Ensure it's not hidden
+  setTimeout(() => {
+      loadingScreen.classList.add("show"); // Start the fade-in
+  }, 10); // Small delay to ensure the transition applies
+}
+
+function hideLoadingScreen() {
+  const loadingScreen = document.getElementById("loading-screen");
+  loadingScreen.classList.remove("show"); // Start the fade-out
+
+  setTimeout(() => {
+      if (!loadingScreen.classList.contains("show")) {
+          loadingScreen.classList.add("hidden"); // Fully hide after fade-out
+      }
+  }, 500); // Match this with the transition duration (0.5s)
+}
+
 /**
  * Adds a change event listener to the mute switch element.
  *
@@ -65,10 +84,14 @@ async function init() {
     }
   });
 
+  showLoadingScreen();
+
   const gameMap = new GameMap(MAP_SIZE);
   LOG && gameMap.display();
 
   ENGINE = await new GameEngine(gameMap);
+
+  hideLoadingScreen();
 
   // Generate D3 data and render the graph
   const { nodes, links } = ENGINE.generateD3Data(true);
@@ -156,7 +179,14 @@ async function handleInput(event) {
     messagesDiv.appendChild(messageElement);
 
     const { cmd, args } = parseInput(value);
+
+    showLoadingScreen();
+
     const result = await ENGINE.executeCommand(cmd, args);
+
+    setTimeout(() => {
+      hideLoadingScreen();
+    }, 50);
 
     if (result && (cmd === "move" || cmd === "go")) {
       updateGraph();
