@@ -187,31 +187,38 @@ const GRAPH = {
   },
 
   updateVisualization: (nodes, links, currentNode, isNew = true) => {
+    // Helper function to merge new data with existing data without duplicates
+    function mergeUniqueById(existingData, newData, getKey) {
+        const dataMap = new Map(existingData.map(d => [getKey(d), d]));
+        newData.forEach(d => dataMap.set(getKey(d), d));
+        return Array.from(dataMap.values());
+    }
+
     // Combine existing nodes and links with new ones if not a new graph
     if (!isNew) {
-      links = LINK.data().concat(links);
-      nodes = NODE.data().concat(nodes);
+        nodes = mergeUniqueById(NODE.data(), nodes, d => d.id);
+        links = mergeUniqueById(LINK.data(), links, d => `${d.source.id}-${d.target.id}`);
     }
 
     // Bind data to links and update the links
-    LINK = LINK.data(links);
+    LINK = LINK.data(links, d => `${d.source.id}-${d.target.id}`);
     LINK.exit().remove();
     LINK = LINK.enter().append("line")
-      .attr("class", "link")
-      .merge(LINK);
+        .attr("class", "link")
+        .merge(LINK);
 
-    // Bind data to nodes
+    // Bind data to nodes with a key function based on id
     NODE = NODE.data(nodes, d => d.id);
     NODE.exit().remove();
 
     // Enter new nodes and assign classes for start and current nodes
     NODE = NODE.enter().append("g")
-      .attr("class", d => `node ${d.id === startNode.id ? 'startNode' : ''} ${d.id === currentNode.id ? 'currentNode' : ''}`)
-      .call(d3.drag()
-        .on("start", GRAPH.dragEvents.dragstarted)
-        .on("drag", GRAPH.dragEvents.dragged)
-        .on("end", GRAPH.dragEvents.dragended))
-      .merge(NODE);
+        .attr("class", d => `node ${d.id === startNode.id ? 'startNode' : ''} ${d.id === currentNode.id ? 'currentNode' : ''}`)
+        .call(d3.drag()
+            .on("start", GRAPH.dragEvents.dragstarted)
+            .on("drag", GRAPH.dragEvents.dragged)
+            .on("end", GRAPH.dragEvents.dragended))
+        .merge(NODE);
 
     // Update existing nodes' classes based on their id
     NODE.attr("class", d => `node ${d.id === startNode.id ? 'startNode' : ''} ${d.id === currentNode.id ? 'currentNode' : ''}`);
@@ -219,9 +226,9 @@ const GRAPH = {
     // Remove and append circles to nodes
     NODE.selectAll("circle").remove();
     NODE.append("circle")
-      .attr("r", 20)
-      .on("mouseover", GRAPH.mouseEvents.handleMouseOver)
-      .on("mouseout", GRAPH.mouseEvents.handleMouseOut);
+        .attr("r", 20)
+        .on("mouseover", GRAPH.mouseEvents.handleMouseOver)
+        .on("mouseout", GRAPH.mouseEvents.handleMouseOut);
 
     // Update simulation nodes and links
     SIMULATION.nodes(nodes);
@@ -229,9 +236,9 @@ const GRAPH = {
 
     // Restart simulation if not a new graph
     if (!isNew) {
-      SIMULATION.alphaTarget(0.3).restart();
+        SIMULATION.alphaTarget(0.3).restart();
     }
-  },
+},
 
   resetState: function () {
     tooltip = d3.select('body').append('div')
