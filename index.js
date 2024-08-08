@@ -36,7 +36,7 @@ function showLoadingScreen() {
   const loadingScreen = document.getElementById("loading-screen");
   loadingScreen.classList.remove("hidden"); // Ensure it's not hidden
   setTimeout(() => {
-      loadingScreen.classList.add("show"); // Start the fade-in
+    loadingScreen.classList.add("show"); // Start the fade-in
   }, 10); // Small delay to ensure the transition applies
 }
 
@@ -45,10 +45,32 @@ function hideLoadingScreen() {
   loadingScreen.classList.remove("show"); // Start the fade-out
 
   setTimeout(() => {
-      if (!loadingScreen.classList.contains("show")) {
-          loadingScreen.classList.add("hidden"); // Fully hide after fade-out
-      }
+    if (!loadingScreen.classList.contains("show")) {
+      loadingScreen.classList.add("hidden"); // Fully hide after fade-out
+    }
   }, 500); // Match this with the transition duration (0.5s)
+}
+
+document.getElementById("messages").addEventListener("scroll", function () {
+  showHideScrollIndicator();
+});
+
+document.getElementById("scrollIndicator").addEventListener("click", function () {
+  scrollToBottom();
+});
+
+function showHideScrollIndicator() {
+  const messagesDiv = this;
+  const scrollIndicator = document.getElementById("scrollIndicator");
+
+  // Check if the user is not scrolled to the bottom
+  const isScrolledToBottom = messagesDiv.scrollTop + messagesDiv.clientHeight >= messagesDiv.scrollHeight - 1;
+
+  if (!isScrolledToBottom) {
+    scrollIndicator.classList.remove("hidden");
+  } else {
+    scrollIndicator.classList.add("hidden");
+  }
 }
 
 /**
@@ -145,6 +167,8 @@ function appendMessage(message, type) {
 
   // Type out the message
   typeMessage(messageElement, message, 25);
+
+  showHideScrollIndicator();
 }
 
 /**

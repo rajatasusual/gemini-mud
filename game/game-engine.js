@@ -37,7 +37,7 @@ class GameEngine {
 
     // Initialize the conductor
     this.conductor = new BandJS();
-    this.conductor.setMasterVolume(50);
+    this.conductor.setMasterVolume(25);
 
     // Initialize the music player
     this.musicPlayer = null;

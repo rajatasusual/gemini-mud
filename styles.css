@@ -60,6 +60,11 @@ body {
     pointer-events: auto; /* Allow interaction when visible */
 }
 
+.loading-screen.hidden {
+    opacity: 0; /* Hidden state */
+    pointer-events: none; /* Prevent interaction when hidden */
+}
+
 .loading-spinner {
     width: 60px;
     height: 60px;
@@ -97,11 +102,21 @@ body {
 }
 
 #chat {
-    flex: 1;
     display: flex;
     flex-direction: column;
     padding: 10px;
-    height: 50%;
+    height: 40%;
+}
+
+#scrollIndicator {
+    cursor: pointer;
+    position: absolute;
+    bottom: 50%;
+    right: 10px;
+}
+
+#scrollIndicator.hidden {
+    display: none;
 }
 
 #messages {
@@ -133,7 +148,7 @@ body {
 }
 
 #map {
-    height: 50%;
+    height: 60%;
     display: flex;
     overflow: hidden;
     margin-top: 20px;

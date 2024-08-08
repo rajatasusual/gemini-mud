@@ -5434,7 +5434,7 @@ var Composer = /*#__PURE__*/function () {
           responseSchema: this.schema,
           maxOutputTokens: 2000
         },
-        systemInstruction: "\n      You are a 8bit chiptune game music composer that creates an ambience for the room in a MUD style game. You will be given the description of the room and you need to reply with the mentioned JSON Schema.\n      An example is:\n      {\n            timeSignature: [4, 4],\n            tempo: $scope.tempo,\n            instruments: {\n                rightHand: {\n                    name: 'square',\n                    pack: 'oscillators'\n                },\n                leftHand: {\n                    name: 'sawtooth',\n                    pack: 'oscillators'\n                }\n            },\n            notes: {\n                // Shorthand notation\n                rightHand: [\n                    'quarter|G4',\n                    'quarter|A4',\n                    'quarter|B4',\n                    'quarter|C5',\n                    'quarter|D5',\n                    'quarter|E5',\n                    'quarter|F#5',\n                    'quarter|G5'\n                ],\n                // More verbose notation\n                leftHand: [\n                    'quarter|C5',\n                    'quarter|D5',\n                    'quarter|E5',\n                    'quarter|F5',\n                    'quarter|G5',\n                    'quarter|A5',\n                    'quarter|B5',\n                    'quarter|C6'\n                ]\n            }\n        }"
+        systemInstruction: "\n      You are a  master of 8bit chiptune game music. You are given the description of the room  in a retro MUD style game and you build an ambience for the room. You have to reply with the mentioned JSON Schema.\n      Take into consideration the tempo and time signature to make the room more interesting. But be in synchronization.\n      An example is:\n      {\n            timeSignature: [4, 4],\n            tempo: $scope.tempo,\n            instruments: {\n                rightHand: {\n                    name: 'square',\n                    pack: 'oscillators'\n                },\n                leftHand: {\n                    name: 'sawtooth',\n                    pack: 'oscillators'\n                }\n            },\n            notes: {\n                // Shorthand notation\n                rightHand: [\n                    'quarter|G4',\n                    'quarter|A4',\n                    'quarter|B4',\n                    'quarter|C5',\n                    'quarter|D5',\n                    'quarter|E5',\n                    'quarter|F#5',\n                    'quarter|G5'\n                ],\n                // More verbose notation\n                leftHand: [\n                    'quarter|C5',\n                    'quarter|D5',\n                    'quarter|E5',\n                    'quarter|F5',\n                    'quarter|G5',\n                    'quarter|A5',\n                    'quarter|B5',\n                    'quarter|C6'\n                ]\n            }\n        }"
       });
     }
 
@@ -5452,7 +5452,7 @@ var Composer = /*#__PURE__*/function () {
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              prompt = "Return the 8 bit chiptune composition that define the ambience of the room. \n    The only acceptable note rhythm patterns are whole, half, quarter,eighth, sixteenth. Stick to this pattern.\n    The room description is: ".concat(room, "\n  ");
+              prompt = "Return the 8 bit chiptune composition that define the ambience of the room.\n    The only acceptable note rhythm patterns are whole,dottedHalf,half,dottedQuarter,tripletHalf,quarter,dottedEighth,tripletQuarter,eighth,dottedSixteenth,tripletEighth,sixteenth,tripletSixteenth,thirtySecond. Stick to this pattern.\n    The room description is: ".concat(room, "\n  ");
               _context.next = 3;
               return this.model.generateContent(prompt);
             case 3:
@@ -5837,7 +5837,7 @@ var GameEngine = /*#__PURE__*/function () {
 
     // Initialize the conductor
     this.conductor = new BandJS();
-    this.conductor.setMasterVolume(50);
+    this.conductor.setMasterVolume(25);
 
     // Initialize the music player
     this.musicPlayer = null;
@@ -6231,7 +6231,6 @@ var GameEngine = /*#__PURE__*/function () {
     key: "changeAmbience",
     value: function changeAmbience(gradientColors) {
       var gradientString = "linear-gradient(-45deg, ".concat(gradientColors.join(', '), ")");
-      document.body.style.transition = 'background 5s ease-in-out';
       document.body.style.background = gradientString;
       document.body.style.backgroundSize = '400% 400%'; // Ensure animation works
 
@@ -6248,6 +6247,7 @@ var GameEngine = /*#__PURE__*/function () {
     key: "playMusic",
     value: function playMusic(music) {
       try {
+        this.musicPlayer && this.musicPlayer.stop(true);
         this.musicPlayer = this.conductor.load(music);
         this.musicPlayer.loop(true);
         var MUSIC = typeof process !== "undefined" ? false : window.MUSIC === true;
@@ -49730,6 +49730,41 @@ function watchVariable(obj, propName, callback) {
     }
   });
 }
+function showLoadingScreen() {
+  var loadingScreen = document.getElementById("loading-screen");
+  loadingScreen.classList.remove("hidden"); // Ensure it's not hidden
+  setTimeout(function () {
+    loadingScreen.classList.add("show"); // Start the fade-in
+  }, 10); // Small delay to ensure the transition applies
+}
+function hideLoadingScreen() {
+  var loadingScreen = document.getElementById("loading-screen");
+  loadingScreen.classList.remove("show"); // Start the fade-out
+
+  setTimeout(function () {
+    if (!loadingScreen.classList.contains("show")) {
+      loadingScreen.classList.add("hidden"); // Fully hide after fade-out
+    }
+  }, 500); // Match this with the transition duration (0.5s)
+}
+document.getElementById("messages").addEventListener("scroll", function () {
+  showHideScrollIndicator();
+});
+document.getElementById("scrollIndicator").addEventListener("click", function () {
+  scrollToBottom();
+});
+function showHideScrollIndicator() {
+  var messagesDiv = this;
+  var scrollIndicator = document.getElementById("scrollIndicator");
+
+  // Check if the user is not scrolled to the bottom
+  var isScrolledToBottom = messagesDiv.scrollTop + messagesDiv.clientHeight >= messagesDiv.scrollHeight - 1;
+  if (!isScrolledToBottom) {
+    scrollIndicator.classList.remove("hidden");
+  } else {
+    scrollIndicator.classList.add("hidden");
+  }
+}
 
 /**
  * Adds a change event listener to the mute switch element.
@@ -49776,16 +49811,19 @@ function _init() {
               scrollToBottom();
             }
           });
+          showLoadingScreen();
           gameMap = new GameMap(MAP_SIZE);
           LOG && gameMap.display();
-          _context.next = 5;
+          _context.next = 6;
           return new GameEngine(gameMap);
-        case 5:
+        case 6:
           ENGINE = _context.sent;
+          hideLoadingScreen();
+
           // Generate D3 data and render the graph
           _ENGINE$generateD3Dat = ENGINE.generateD3Data(true), nodes = _ENGINE$generateD3Dat.nodes, links = _ENGINE$generateD3Dat.links;
           GRAPH.init(nodes, links);
-        case 8:
+        case 10:
         case "end":
           return _context.stop();
       }
@@ -49832,6 +49870,7 @@ function appendMessage(message, type) {
 
   // Type out the message
   typeMessage(messageElement, message, 25);
+  showHideScrollIndicator();
 }
 
 /**
@@ -49875,7 +49914,7 @@ function _handleInput() {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
           if (!(event.key === "Enter")) {
-            _context2.next = 14;
+            _context2.next = 16;
             break;
           }
           value = event.target.value.trim();
@@ -49886,17 +49925,21 @@ function _handleInput() {
           messagesDiv = document.getElementById("messages");
           messagesDiv.appendChild(messageElement);
           _parseInput = parseInput(value), cmd = _parseInput.cmd, args = _parseInput.args;
-          _context2.next = 11;
+          showLoadingScreen();
+          _context2.next = 12;
           return ENGINE.executeCommand(cmd, args);
-        case 11:
+        case 12:
           result = _context2.sent;
+          setTimeout(function () {
+            hideLoadingScreen();
+          }, 50);
           if (result && (cmd === "move" || cmd === "go")) {
             updateGraph();
           } else if (!result) {
             // SHOW ERROR MESSAGE
           }
           LOG && ENGINE.gameMap.display();
-        case 14:
+        case 16:
         case "end":
           return _context2.stop();
       }
