@@ -103,13 +103,10 @@ class RoomGenerator {
         return null;
 
       } else {
-        if(LOG) {
-          relayMessage("[INFO] Room generated", generatedRoom);
-        }
         return generatedRoom;
       }
     } catch (err) {
-      relayMessage(err);
+      // SHOW ERROR
       return null;
     }
   }

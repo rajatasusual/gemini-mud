@@ -75,25 +75,50 @@ class Designer {
     }
   }
 
-  /**
-   * Asynchronously generates a short, narrative summary of a player's journey through the given rooms in a MUD-style game.
-   *
-   * @param {Array<Object>} rooms - A JSON representation of the rooms in the journey.
-   * @return {Promise<string>} A promise that resolves to the generated narrative summary text.
-   */
-  async describeJourney(rooms) {
-    const prompt = `
-      Create a short, narrative summary of a player's journey through the following rooms in a MUD-style game, leading up to a satisfying conclusion. Highlight key moments, challenges overcome, and discoveries made.
+  hexToRgb(hex) {
+    // Remove the leading #
+    hex = hex.replace(/^#/, '');
 
-      \`\`\`json
-      ${JSON.stringify(rooms, null, 2)}
-      \`\`\`
-      `;
+    // Convert shorthand hex (#abc) to full hex (#aabbcc)
+    if (hex.length === 3) {
+      hex = hex.split('').map(char => char + char).join('');
+    }
 
-    let response = await this.model.generateContent(prompt);
+    // Convert to RGB
+    let bigint = parseInt(hex, 16);
+    let r = (bigint >> 16) & 255;
+    let g = (bigint >> 8) & 255;
+    let b = bigint & 255;
 
-    return response.response.text();
+    return { r, g, b };
   }
+
+  luminance(r, g, b) {
+    // Convert RGB to sRGB
+    let a = [r, g, b].map(value => {
+      value /= 255;
+      return value <= 0.03928 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
+    });
+
+    // Calculate luminance
+    return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+  }
+
+  bestContrastColor(gradient) {
+    let totalLuminance = 0;
+
+    // Calculate the average luminance
+    gradient.forEach(color => {
+      let { r, g, b } = this.hexToRgb(color);
+      totalLuminance += this.luminance(r, g, b);
+    });
+
+    let averageLuminance = totalLuminance / gradient.length;
+
+    // Return black for bright gradients, and white for dark gradients
+    return averageLuminance > 0.5 ? '#000000' : '#FFFFFF';
+  }
+
 }
 
 module.exports = { default: Designer };

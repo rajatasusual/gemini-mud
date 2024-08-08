@@ -1,10 +1,10 @@
 let SVG = null;
 let SVGWidth = window.innerWidth;
-let SVGHeight = window.innerHeight/2;
+let SVGHeight = window.innerHeight / 2;
 const gridSize = 20; // Size of each grid cell
 
 let mouse_x = 0, mouse_y = 0;
-let zoom_level = 0.8;
+let zoom_level = 1;
 
 let SIMULATION = null;
 let force = true;
@@ -46,7 +46,7 @@ const GRAPH = {
 
   updateSVGSize: () => {
     SVGWidth = (window.innerWidth) - 50;
-    SVGHeight = window.innerHeight/2;
+    SVGHeight = window.innerHeight / 2;
     SVG.attr("width", SVGWidth).attr("height", SVGHeight);
     GRAPH.addLegend();
     SIMULATION.force("center", d3.forceCenter(SVGWidth / 2, SVGHeight / 2));
@@ -89,16 +89,16 @@ const GRAPH = {
 
     legendDetails.forEach(legendEntry => {
       rect.append("circle")
-        .attr("cx", SVGWidth - 150 + 20) // Adjust x position relative to rect
+        .attr("cx", SVGWidth - 150) // Adjust x position relative to rect
         .attr("cy", y)
         .attr("r", 5)
         .attr("class", `${legendEntry[0]}`)
         .attr("pointer-events", "none");
       rect.append("text")
-        .attr("x", SVGWidth - 150 + 40) // Adjust x position relative to rect
+        .attr("x", SVGWidth - 150 + 20) // Adjust x position relative to rect
         .attr("y", y)
         .text(legendEntry[1])
-        .style("font-size", "10px")
+        .style("font-size", "14px")
         .attr("alignment-baseline", "middle")
         .attr("class", `legend-text`)
         .attr("pointer-events", "none");
@@ -109,7 +109,7 @@ const GRAPH = {
     const text = rect.append("text")
       .attr("x", 10)
       .attr("y", SVGHeight - 20)
-      .attr("font-size", "12px")
+      .attr("font-size", "16px")
       .attr("class", "legend-text");
 
     // Mousemove event handler to update coordinates
@@ -136,7 +136,6 @@ const GRAPH = {
       .attr("y1", d => d * gridSize * zoom_level)
       .attr("x2", SVGWidth)
       .attr("y2", d => d * gridSize * zoom_level)
-      .style("stroke-opacity", d => 0.4 + (d / numCellsY) * 0.6); // Adjust opacity gradually
 
     gridlines.selectAll(".vline")
       .data(d3.range(numCellsX))
@@ -147,7 +146,6 @@ const GRAPH = {
       .attr("y1", 0)
       .attr("x2", d => d * gridSize * zoom_level)
       .attr("y2", SVGHeight)
-      .style("stroke-opacity", d => 0.4 + (d / numCellsX) * 0.6); // Adjust opacity gradually
   },
 
   initZoom: (linkGroup, nodeGroup) => {

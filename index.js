@@ -3,6 +3,9 @@ const GameEngine = require("./game/game-engine.js").default;
 
 const MAP_SIZE = window.MAP_SIZE ? window.MAP_SIZE : 5; // Adjust the map size as needed
 const LOG = window.LOG ? window.LOG : false;
+window.MUSIC = typeof process !== "undefined" ? false : true;
+
+let ENGINE = null;
 
 function watchVariable(obj, propName, callback) {
   let value = obj[propName];
@@ -21,6 +24,19 @@ function watchVariable(obj, propName, callback) {
   });
 }
 
+document.getElementById("muteSwitch").addEventListener("change", (event) => {
+  if (event.target.checked) {
+    window.MUSIC = true;
+
+    ENGINE.player && ENGINE.musicPlayer.play();
+
+  } else {
+    window.MUSIC = false;
+
+    ENGINE.player && ENGINE.musicPlayer.pause();
+  }
+})
+
 function typeMessage(element, message, speed) {
   let i = 0;
   function type() {
@@ -33,12 +49,12 @@ function typeMessage(element, message, speed) {
   type();
 }
 
-function appendMessage(message) {
+function appendMessage(message, type) {
   const messagesDiv = document.getElementById("messages");
   const messageElement = document.createElement("div");
   messagesDiv.appendChild(messageElement);
   messageElement.className = 'message';
-  messages.appendChild(messageElement);
+  
   typeMessage(messageElement, message, 25);
 }
 
@@ -51,16 +67,12 @@ function parseInput(input) {
 
 const run = async () => {
   watchVariable(window, "message", (newValue, oldValue) => {
-    if (typeof newValue === "object") {
-      function applyGradient(gradientColors) {
-        const gradientString = `linear-gradient(-45deg, ${gradientColors.join(', ')})`;
-        document.body.style.background = gradientString;
-        document.body.style.backgroundSize = '400% 400%'; // Ensure animation works
-      }
-
-      applyGradient(newValue);
-    } else if (newValue !== oldValue) {
-      appendMessage(newValue);
+    if (newValue !== oldValue) {
+      const message = newValue.message;
+      const type = newValue.type;
+      appendMessage(message, type);
+      const messagesDiv = document.getElementById("messages");
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
   });
 
@@ -68,37 +80,39 @@ const run = async () => {
 
   LOG && gameMap.display();
 
-  const engine = await new GameEngine(gameMap);
+  ENGINE = await new GameEngine(gameMap);
 
   const input = document.getElementById("input");
 
   input.addEventListener("keydown", async (event) => {
 
     if (event.key === "Enter") {
+      const value = input.value.trim();
+      input.value = "";
+      input.focus();
+
       const messageElement = document.createElement('div');
       messageElement.className = 'message';
       messages.appendChild(messageElement);
-      typeMessage(messageElement, input.value, 50);
 
       // Execute the command
-      const { cmd, args } = parseInput(input.value);
-      const moved = await engine.executeCommand(cmd, args);
+      const { cmd, args } = parseInput(value);
+      const result = await ENGINE.executeCommand(cmd, args);
 
-      if (moved) {
+      if (result && (cmd === "move" || cmd === "go")) {
         // Generate D3 data and render the graph
-        const { nodes, links, currentNode } = engine.generateD3Data(false);
+        const { nodes, links, currentNode } = ENGINE.generateD3Data(false);
         GRAPH.updateVisualization(nodes, links, currentNode, false);
+      } else if (!result) {
+        //SHOW ERROR MESSAGE
       }
-
-      input.value = "";
-      input.focus();
 
       LOG && gameMap.display();
     }
   });
 
   // Generate D3 data and render the graph
-  const { nodes, links } = engine.generateD3Data(true);
+  const { nodes, links } = ENGINE.generateD3Data(true);
 
   GRAPH.init(nodes, links);
 };

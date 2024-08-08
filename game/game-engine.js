@@ -1,5 +1,7 @@
 const Describer = require("./describer.js").default;
 const Designer = require("./designer.js").default;
+const Composer = require("./composer.js").default;
+
 const relayMessage = require("./logger").default;
 const RoomGenerator = require("./room-generator.js").default;
 
@@ -31,6 +33,14 @@ class GameEngine {
     this.roomGenerator = new RoomGenerator(); // Instantiate the RoomGenerator
     this.describer = new Describer();
     this.designer = new Designer();
+    this.composer = new Composer();
+
+    // Initialize the conductor
+    this.conductor = new BandJS();
+    this.conductor.setMasterVolume(50);
+
+    // Initialize the music player
+    this.musicPlayer = null;
 
     // Initialize the nodes and links
     this.nodes = [];
@@ -44,8 +54,6 @@ class GameEngine {
 
       return this;
     })();
-
-
 
   }
 
@@ -83,10 +91,12 @@ class GameEngine {
       const room = await this.roomGenerator.generateRoom(cellInfo);
       this.updateIDs(room);
       const narration = await this.describer.describeRoom(room);
-      room["narration"] = narration;
       const ambience = await this.designer.DesignRoom(narration);
+      const music = await this.composer.ComposeMusic(narration);
 
+      room["music"] = music;
       room["ambience"] = ambience;
+      room["narration"] = narration;
 
       // Update the gameMap
       this.gameMap.rooms[`${x},${y}`] = room;
@@ -94,7 +104,7 @@ class GameEngine {
       cellInfo.room = room;
     } else {
       if (LOG) {
-        relayMessage("Cell is already occupied.");
+        relayMessage("Cell is already occupied.", "system");
       }
       return null; // Or throw an error
     }
@@ -164,6 +174,7 @@ class GameEngine {
   generateD3Data(isNew = true) {
     let node = null;
     let link = null;
+    
     // Add nodes and links for the path taken
     for (let i = 0; i < this.player.pathTaken.length; i++) {
       const cell = this.player.pathTaken[i];
@@ -254,7 +265,7 @@ class GameEngine {
         this.quit();
         break;
       default:
-        relayMessage("Invalid command.");
+        relayMessage("Invalid command.", "system");
         break;
     }
 
@@ -271,7 +282,7 @@ class GameEngine {
     const currentRoom = this.gameMap.rooms[`${this.player.x},${this.player.y}`];
 
     if (!currentRoom) {
-      relayMessage("There's nothing here.");
+      relayMessage("There's nothing here.", "system");
       return;
     }
 
@@ -281,8 +292,48 @@ class GameEngine {
     }
 
     // Display room description (you might need to parse JSON here)
-    relayMessage(currentRoom["narration"]);
-    relayMessage(currentRoom["ambience"])
+    relayMessage(currentRoom["narration"], "system");
+
+    if (typeof process === "undefined" && window)
+      this.setMood(currentRoom);
+  }
+
+  setMood(room) {
+    const MUSIC = typeof process !== "undefined" ? false : window.MUSIC === true;
+
+    // Set the background
+    this.changeAmbience(room["ambience"]);
+    MUSIC && this.playMusic(room["music"]);
+  }
+
+  changeAmbience(gradientColors) {
+    const gradientString = `linear-gradient(-45deg, ${gradientColors.join(', ')})`;
+    document.body.style.transition = 'background 5s ease-in-out';
+    document.body.style.background = gradientString;
+    document.body.style.backgroundSize = '400% 400%'; // Ensure animation works
+
+    const bestContrastColor = this.designer.bestContrastColor(gradientColors);
+    document.body.style.color = bestContrastColor;
+
+    let elements = document.getElementById("graph").getElementsByClassName("legend-text");
+
+    // Loop through each element and change its fill color
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].style.fill = bestContrastColor;
+    }
+
+  }
+
+  playMusic(music) {
+    try {
+      this.musicPlayer = this.conductor.load(music);
+      this.musicPlayer.loop(true);
+
+      this.musicPlayer.play();
+
+    } catch (error) {
+      console.error(error);
+    }
   }
 
 
@@ -311,13 +362,14 @@ class GameEngine {
           this.player.x--;
           break;
       }
+      relayMessage(`You move ${direction}.\n`, "user");
+
       // Generate the room if it hasn't been generated yet
       if (!this.gameMap.rooms[`${this.player.x},${this.player.y}`] && GENERATE) {
         await this.generateRoomAndUpdateMap(this.player.x, this.player.y);
       }
 
       this.player.pathTaken.push({ x: this.player.x, y: this.player.y }); // Add new position to pathTaken
-      relayMessage(`You move ${direction}.\n`);
       LOG && this.showPathTaken();
 
       await this.look(); // Automatically look around after moving
@@ -328,7 +380,7 @@ class GameEngine {
 
       return true;
     } else {
-      relayMessage("You can't go that way.");
+      relayMessage("You tried to go '" + direction + "', but you can't go that way.", "system");
 
       return false;
     }
@@ -389,7 +441,6 @@ class GameEngine {
       (pos) => this.gameMap.rooms[`${pos.x},${pos.y}`]
     );
     const journeyDescription = await this.describer.describeJourney(roomsVisited);
-    relayMessage("\nCongratulations! You have reached the end of the game!");
     relayMessage(journeyDescription);
 
     this.quit();
@@ -401,7 +452,6 @@ class GameEngine {
    * @return {void} This function does not return a value.
    */
   quit() {
-    relayMessage("Thanks for playing!");
     if (typeof process !== "undefined" && process.exit) {
       process.exit(0); // Exit the game in Node.js environment
     }

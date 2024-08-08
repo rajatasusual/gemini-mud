@@ -1,11 +1,11 @@
 // Modify console.log statements to work in both Node.js and browser environments
-const logMessage = (message) => {
+const relayMessage = (message, type) => {
     if (typeof window === "undefined") {
         console.log(message);
     } else {
         window.LOG && console.log(message);
-        window.message = message;
+        window.message = {message, type};
     }
 };
 
-module.exports = { default: logMessage }
+module.exports = { default: relayMessage }

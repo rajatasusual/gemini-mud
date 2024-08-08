@@ -5,7 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Game</title>
-  <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 
 <body>
@@ -15,6 +19,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"
     integrity="sha512-vc58qvvBdrDR4etbxMdlTt4GBQk1qjvyORR2nrsPsFPyrs+/u5c3+1Ct6upOgdZoIl7eq6k3a1UPDSNAQi/32A=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="band.min.js"></script>
   <script type="importmap">
     {
       "imports": {
@@ -46,6 +51,10 @@
   </div>
   <div id="inputContainer">
     <input type="text" id="input" placeholder="Enter command">
+    <div class="switches">
+      <input type="checkbox" class="switch" id="muteSwitch" checked>
+      <label for="muteSwitch" class="switch-label" title="music"><i class="fa-solid fa-music"></i></label>
+    </div>
   </div>
 </body>
 

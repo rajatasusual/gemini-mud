@@ -11,7 +11,7 @@ body {
     color: #FFFFFF;
     animation: gradient 15s ease infinite;
     background-size: 400% 400%;
-    transition: background 2s ease-in-out; /* Added transition for smooth background change */
+    transition: background 5s ease-in-out;
 }
 
 @keyframes gradient {
@@ -44,15 +44,16 @@ body {
     display: flex;
     flex-direction: column;
     padding: 10px;
+    height: 50%;
 }
 
 #messages {
     flex: 1;
-    overflow-y: auto;
+    overflow-y: scroll;
     padding: 10px;
-    background: rgba(0, 0, 0, 0.25);
     border-radius: 5px;
     transition: all 0.3s;
+    scroll-behavior: smooth;
 }
 
 #map {
@@ -72,7 +73,42 @@ body {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.75);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.switches {
+    display: flex;
+    padding: 15px;
+}
+
+/* Hide default checkbox */
+.switch {
+    display: none;
+}
+
+/* Style checkbox container */
+.switch-label {
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    background-color: #FFF;
+    border-radius: 50%;
+    padding: 8px;
+}
+
+/* Style the Font Awesome icon */
+.switch-label i {
+    color: #888;
+    /* Adjust color */
+}
+
+/* Change icon color when checkbox is checked */
+.switch:checked+.switch-label i {
+    color: #3498DB;
+    /* Adjust color */
 }
 
 #input {
@@ -89,9 +125,20 @@ body {
 }
 
 @keyframes glowing {
-    0% { border-color: #3498DB; box-shadow: 0 0 5px #3498DB; }
-    50% { border-color: #2980B9; box-shadow: 0 0 20px #2980B9; }
-    100% { border-color: #3498DB; box-shadow: 0 0 5px #3498DB; }
+    0% {
+        border-color: #3498DB;
+        box-shadow: 0 0 5px #3498DB;
+    }
+
+    50% {
+        border-color: #F9E358;
+        box-shadow: 0 0 20px #FFF;
+    }
+
+    100% {
+        border-color: #ACE2F9;
+        box-shadow: 0 0 5px #3498DB;
+    }
 }
 
 #input:focus {
@@ -164,8 +211,4 @@ body {
 
 .message {
     animation: fadeIn 1s;
-}
-
-#messages {
-    scroll-behavior: smooth;
 }
