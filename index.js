@@ -1,11 +1,15 @@
+// Importing necessary modules
 const GameMap = require("./game/game-map.js").default;
 const GameEngine = require("./game/game-engine.js").default;
 
+// Configuration and global variables
 const MAP_SIZE = window.MAP_SIZE || 5;
 const LOG = window.LOG || false;
 window.MUSIC = typeof process === "undefined" || !process.env.BROWSER;
 
 let ENGINE = null;
+
+// Utility Functions
 
 /**
  * Watches a variable and triggers a callback whenever the value changes.
@@ -13,7 +17,6 @@ let ENGINE = null;
  * @param {Object} obj - The object containing the variable to watch.
  * @param {string} propName - The name of the variable to watch.
  * @param {Function} callback - The callback function to trigger when the value changes.
- *                             It receives the new value and the old value as parameters.
  */
 function watchVariable(obj, propName, callback) {
   let value = obj[propName];
@@ -31,6 +34,84 @@ function watchVariable(obj, propName, callback) {
     },
   });
 }
+
+/**
+ * Types out a message character by character in the specified element with the given speed.
+ *
+ * @param {HTMLElement} element - The element where the message will be typed.
+ * @param {string} message - The message to be typed.
+ * @param {number} speed - The speed at which each character will be typed (in milliseconds).
+ */
+function typeMessage(element, message, speed) {
+  let i = 0;
+  function type() {
+    if (i < message.length) {
+      element.innerHTML += message.charAt(i);
+      i++;
+      setTimeout(type, speed);
+    }
+  }
+  type();
+}
+
+/**
+ * Appends a message to the "messages" div element and types out the message character by character.
+ *
+ * @param {string} message - The message to be appended and typed.
+ * @param {string} type - The type of message (e.g., "user" or "system").
+ */
+function appendMessage(message, type) {
+  const messagesDiv = document.getElementById("messages");
+  const messageElement = document.createElement("div");
+
+  // Apply a different class based on the type
+  if (type === "user") {
+    messageElement.className = "message user-message";
+  } else if (type === "system") {
+    messageElement.className = "message system-message";
+    // Add event listener to remove the message on click
+    messageElement.addEventListener('click', () => {
+      messageElement.remove();
+    });
+  }
+
+  // Append the message to the messages div
+  messagesDiv.appendChild(messageElement);
+
+  // Type out the message
+  typeMessage(messageElement, message, 25);
+}
+
+/**
+ * Parses the input string into a command and arguments.
+ *
+ * @param {string} input - The input string to be parsed.
+ * @return {Object} An object containing the command and arguments.
+ */
+function parseInput(input) {
+  const [cmd, args = ""] = input.trim().split(" ");
+  return { cmd, args };
+}
+
+// DOM Event Listeners
+
+document.getElementById("messages").addEventListener("scroll", showHideScrollIndicator);
+
+document.getElementById("scrollIndicator").addEventListener("click", scrollToBottom);
+
+document.getElementById("muteSwitch").addEventListener("change", (event) => {
+  if (event.target.checked) {
+    window.MUSIC = true;
+    ENGINE.player && ENGINE.musicPlayer.play();
+  } else {
+    window.MUSIC = false;
+    ENGINE.player && ENGINE.musicPlayer.pause();
+  }
+});
+
+document.getElementById("input").addEventListener("keydown", handleInput);
+
+// Loading Screen Functions
 
 function showLoadingScreen() {
   const loadingScreen = document.getElementById("loading-screen");
@@ -51,16 +132,10 @@ function hideLoadingScreen() {
   }, 500); // Match this with the transition duration (0.5s)
 }
 
-document.getElementById("messages").addEventListener("scroll", function () {
-  showHideScrollIndicator();
-});
-
-document.getElementById("scrollIndicator").addEventListener("click", function () {
-  scrollToBottom();
-});
+// Scroll Indicator Functions
 
 function showHideScrollIndicator() {
-  const messagesDiv = this;
+  const messagesDiv = document.getElementById("messages");
   const scrollIndicator = document.getElementById("scrollIndicator");
 
   // Check if the user is not scrolled to the bottom
@@ -73,23 +148,12 @@ function showHideScrollIndicator() {
   }
 }
 
-/**
- * Adds a change event listener to the mute switch element.
- *
- * @param {Event} event - The event object representing the change event.
- */
-document.getElementById("muteSwitch").addEventListener("change", (event) => {
-  if (event.target.checked) {
-    window.MUSIC = true;
+function scrollToBottom() {
+  const messagesDiv = document.getElementById("messages");
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
 
-    ENGINE.player && ENGINE.musicPlayer.play();
-
-  } else {
-    window.MUSIC = false;
-
-    ENGINE.player && ENGINE.musicPlayer.pause();
-  }
-})
+// Game Initialization and Control
 
 /**
  * Initializes the application by setting up event listeners, creating a GameMap,
@@ -122,69 +186,6 @@ async function init() {
 }
 
 /**
- * Types out a message character by character in the specified element with the given speed.
- *
- * @param {HTMLElement} element - The element where the message will be typed.
- * @param {string} message - The message to be typed.
- * @param {number} speed - The speed at which each character will be typed (in milliseconds).
- */
-function typeMessage(element, message, speed) {
-  let i = 0;
-  function type() {
-    if (i < message.length) {
-      element.innerHTML += message.charAt(i);
-      i++;
-      setTimeout(type, speed);
-    }
-  }
-  type();
-}
-
-/**
- * Appends a message to the "messages" div element and types out the message character by character.
- *
- * @param {string} message - The message to be appended and typed.
- * @param {string} type - The type of message (e.g., "user" or "system").
- * @return {void} This function does not return a value.
- */
-function appendMessage(message, type) {
-  const messagesDiv = document.getElementById("messages");
-  const messageElement = document.createElement("div");
-
-  // Apply a different class based on the type
-  if (type === "user") {
-    messageElement.className = "message user-message";
-  } else if (type === "system") {
-    messageElement.className = "message system-message";
-    // Add event listener to remove the message on click
-    messageElement.addEventListener('click', () => {
-      messageElement.remove();
-    });
-  }
-
-  // Append the message to the messages div
-  messagesDiv.appendChild(messageElement);
-
-  // Type out the message
-  typeMessage(messageElement, message, 25);
-
-  showHideScrollIndicator();
-}
-
-/**
- * Parses the input string into a command and arguments.
- *
- * @param {string} input - The input string to be parsed.
- * @return {Object} An object containing the command and arguments.
- */
-function parseInput(input) {
-  const [cmd, args = ""] = input.trim().split(" ");
-  return { cmd, args };
-}
-
-document.getElementById("input").addEventListener("keydown", handleInput);
-
-/**
  * Handles the input event when the Enter key is pressed. Parses the input value, executes the command,
  * updates the graph if necessary, and displays the game map if logging is enabled.
  *
@@ -196,11 +197,6 @@ async function handleInput(event) {
     const value = event.target.value.trim();
     event.target.value = "";
     event.target.focus();
-
-    const messageElement = document.createElement("div");
-    messageElement.className = "message";
-    const messagesDiv = document.getElementById("messages");
-    messagesDiv.appendChild(messageElement);
 
     const { cmd, args } = parseInput(value);
 
@@ -232,9 +228,5 @@ async function updateGraph() {
   GRAPH.updateVisualization(nodes, links, currentNode, false);
 }
 
-function scrollToBottom() {
-  const messagesDiv = document.getElementById("messages");
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
-}
-
+// Start the game initialization
 init();

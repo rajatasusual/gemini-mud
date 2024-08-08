@@ -111,7 +111,7 @@ body {
 #scrollIndicator {
     cursor: pointer;
     position: absolute;
-    bottom: 50%;
+    bottom: 55%;
     right: 10px;
 }
 
