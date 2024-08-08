@@ -105,18 +105,6 @@ const GRAPH = {
 
       y += 30; // Increment y position for next legend entry
     });
-
-    const text = rect.append("text")
-      .attr("x", 10)
-      .attr("y", SVGHeight - 20)
-      .attr("font-size", "16px")
-      .attr("class", "legend-text");
-
-    // Mousemove event handler to update coordinates
-    document.addEventListener("mousemove", function (event) {
-      [mouse_x, mouse_y] = [event.clientX, event.clientY - 70];
-      text.text(`Mouse Coordinates: (${mouse_x}, ${mouse_y}) | Zoom Level: ${Math.round(zoom_level * 100)}%`);
-    });
   },
 
   addGridlines: () => {

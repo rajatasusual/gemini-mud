@@ -5303,6 +5303,185 @@ PEMEncoder.prototype.encode = function encode(data, options) {
 
 /***/ }),
 
+/***/ "./game/composer.js":
+/*!**************************!*\
+  !*** ./game/composer.js ***!
+  \**************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+// Conditional import for Node.js environment
+var GoogleGenerativeAI;
+var dotenv;
+if (typeof window === "undefined") {
+  GoogleGenerativeAI = (__webpack_require__(/*! @google/generative-ai */ "@google/generative-ai").GoogleGenerativeAI);
+  dotenv = __webpack_require__(/*! dotenv */ "./node_modules/dotenv/lib/main.js");
+  dotenv.config();
+} else {
+  // Assuming you have a way to provide the API key in the browser environment
+  GoogleGenerativeAI = window.GoogleGenerativeAI;
+}
+
+/**
+ * Class representing a Composer.
+ * @class
+ */
+var Composer = /*#__PURE__*/function () {
+  /**
+   * Creates an instance of Composer.
+   * @constructor
+   */
+  function Composer() {
+    _classCallCheck(this, Composer);
+    this.schema = {
+      type: "object",
+      properties: {
+        timeSignature: {
+          type: "array",
+          items: {
+            type: "integer"
+          }
+        },
+        tempo: {
+          type: "integer"
+        },
+        instruments: {
+          type: "object",
+          properties: {
+            rightHand: {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                  "enum": ['sine', 'square', 'sawtooth', 'triangle']
+                },
+                pack: {
+                  type: "string",
+                  "enum": ['oscillators']
+                }
+              },
+              required: ["name", "pack"]
+            },
+            leftHand: {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                  "enum": ['sine', 'square', 'sawtooth', 'triangle']
+                },
+                pack: {
+                  type: "string",
+                  "enum": ['oscillators']
+                }
+              },
+              required: ["name", "pack"]
+            }
+          },
+          required: ["rightHand"]
+        },
+        notes: {
+          type: "object",
+          properties: {
+            rightHand: {
+              type: "array",
+              items: {
+                type: "string",
+                pattern: "^(whole|dottedHalf|half|dottedQuarter|tripletHalf|quarter|dottedEighth|tripletQuarter|eighth|dottedSixteenth|tripletEighth|sixteenth|tripletSixteenth|thirtySecond)\\|[A-G]#?[0-9]$"
+              }
+            },
+            leftHand: {
+              type: "array",
+              items: {
+                type: "string",
+                pattern: "^(whole|dottedHalf|half|dottedQuarter|tripletHalf|quarter|dottedEighth|tripletQuarter|eighth|dottedSixteenth|tripletEighth|sixteenth|tripletSixteenth|thirtySecond)\\|[A-G]#?[0-9]$"
+              }
+            }
+          },
+          required: ["rightHand"]
+        }
+      },
+      required: ["timeSignature", "tempo", "instruments", "notes"]
+    };
+    var ajv = new Ajv({
+      strict: false
+    });
+    this.validate = ajv.compile(this.schema);
+    this.model = this.getModel();
+  }
+
+  /**
+   * Retrieves a generative model from the GoogleGenerativeAI API.
+   *
+   * @return {Promise<GenerativeModel>} A promise that resolves to a generative model.
+   */
+  return _createClass(Composer, [{
+    key: "getModel",
+    value: function getModel() {
+      var apiKey = typeof process !== "undefined" && process.env ? process.env.API_KEY : window.API_KEY;
+      var genAI = new GoogleGenerativeAI(apiKey);
+      return genAI.getGenerativeModel({
+        model: "gemini-1.5-pro",
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: this.schema,
+          maxOutputTokens: 2000
+        },
+        systemInstruction: "\n      You are a 8bit chiptune game music composer that creates an ambience for the room in a MUD style game. You will be given the description of the room and you need to reply with the mentioned JSON Schema.\n      An example is:\n      {\n            timeSignature: [4, 4],\n            tempo: $scope.tempo,\n            instruments: {\n                rightHand: {\n                    name: 'square',\n                    pack: 'oscillators'\n                },\n                leftHand: {\n                    name: 'sawtooth',\n                    pack: 'oscillators'\n                }\n            },\n            notes: {\n                // Shorthand notation\n                rightHand: [\n                    'quarter|G4',\n                    'quarter|A4',\n                    'quarter|B4',\n                    'quarter|C5',\n                    'quarter|D5',\n                    'quarter|E5',\n                    'quarter|F#5',\n                    'quarter|G5'\n                ],\n                // More verbose notation\n                leftHand: [\n                    'quarter|C5',\n                    'quarter|D5',\n                    'quarter|E5',\n                    'quarter|F5',\n                    'quarter|G5',\n                    'quarter|A5',\n                    'quarter|B5',\n                    'quarter|C6'\n                ]\n            }\n        }"
+      });
+    }
+
+    /**
+     * Asynchronously generates a vivid music for a given room by sending a prompt to a model.
+     *
+     * @param {Object} room - The room object to generate a ambience for.
+     * @return {Promise<string>} A promise that resolves to the generated music.
+     */
+  }, {
+    key: "ComposeMusic",
+    value: (function () {
+      var _ComposeMusic = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(room) {
+        var prompt, response;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              prompt = "Return the 8 bit chiptune composition that define the ambience of the room. \n    The only acceptable note rhythm patterns are whole, half, quarter,eighth, sixteenth. Stick to this pattern.\n    The room description is: ".concat(room, "\n  ");
+              _context.next = 3;
+              return this.model.generateContent(prompt);
+            case 3:
+              response = _context.sent;
+              _context.prev = 4;
+              return _context.abrupt("return", JSON.parse(response.response.text()));
+            case 8:
+              _context.prev = 8;
+              _context.t0 = _context["catch"](4);
+              return _context.abrupt("return", response.response.text());
+            case 11:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, this, [[4, 8]]);
+      }));
+      function ComposeMusic(_x) {
+        return _ComposeMusic.apply(this, arguments);
+      }
+      return ComposeMusic;
+    }())
+  }]);
+}();
+module.exports = {
+  "default": Composer
+};
+
+/***/ }),
+
 /***/ "./game/describer.js":
 /*!***************************!*\
   !*** ./game/describer.js ***!
@@ -5542,6 +5721,61 @@ var Designer = /*#__PURE__*/function () {
       }
       return DesignRoom;
     }())
+  }, {
+    key: "hexToRgb",
+    value: function hexToRgb(hex) {
+      // Remove the leading #
+      hex = hex.replace(/^#/, '');
+
+      // Convert shorthand hex (#abc) to full hex (#aabbcc)
+      if (hex.length === 3) {
+        hex = hex.split('').map(function (_char) {
+          return _char + _char;
+        }).join('');
+      }
+
+      // Convert to RGB
+      var bigint = parseInt(hex, 16);
+      var r = bigint >> 16 & 255;
+      var g = bigint >> 8 & 255;
+      var b = bigint & 255;
+      return {
+        r: r,
+        g: g,
+        b: b
+      };
+    }
+  }, {
+    key: "luminance",
+    value: function luminance(r, g, b) {
+      // Convert RGB to sRGB
+      var a = [r, g, b].map(function (value) {
+        value /= 255;
+        return value <= 0.03928 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
+      });
+
+      // Calculate luminance
+      return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+    }
+  }, {
+    key: "bestContrastColor",
+    value: function bestContrastColor(gradient) {
+      var _this = this;
+      var totalLuminance = 0;
+
+      // Calculate the average luminance
+      gradient.forEach(function (color) {
+        var _this$hexToRgb = _this.hexToRgb(color),
+          r = _this$hexToRgb.r,
+          g = _this$hexToRgb.g,
+          b = _this$hexToRgb.b;
+        totalLuminance += _this.luminance(r, g, b);
+      });
+      var averageLuminance = totalLuminance / gradient.length;
+
+      // Return black for bright gradients, and white for dark gradients
+      return averageLuminance > 0.5 ? '#000000' : '#FFFFFF';
+    }
   }]);
 }();
 module.exports = {
@@ -5567,6 +5801,7 @@ function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" 
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 var Describer = (__webpack_require__(/*! ./describer.js */ "./game/describer.js")["default"]);
 var Designer = (__webpack_require__(/*! ./designer.js */ "./game/designer.js")["default"]);
+var Composer = (__webpack_require__(/*! ./composer.js */ "./game/composer.js")["default"]);
 var relayMessage = (__webpack_require__(/*! ./logger */ "./game/logger.js")["default"]);
 var RoomGenerator = (__webpack_require__(/*! ./room-generator.js */ "./game/room-generator.js")["default"]);
 var dotenv;
@@ -5598,6 +5833,14 @@ var GameEngine = /*#__PURE__*/function () {
     this.roomGenerator = new RoomGenerator(); // Instantiate the RoomGenerator
     this.describer = new Describer();
     this.designer = new Designer();
+    this.composer = new Composer();
+
+    // Initialize the conductor
+    this.conductor = new BandJS();
+    this.conductor.setMasterVolume(50);
+
+    // Initialize the music player
+    this.musicPlayer = null;
 
     // Initialize the nodes and links
     this.nodes = [];
@@ -5678,13 +5921,13 @@ var GameEngine = /*#__PURE__*/function () {
     key: "generateRoomAndUpdateMap",
     value: (function () {
       var _generateRoomAndUpdateMap = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(x, y) {
-        var cellInfo, room, narration, ambience;
+        var cellInfo, room, narration, ambience, music;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               cellInfo = this.gameMap.getCell(x, y);
               if (!(this.gameMap.rooms["".concat(x, ",").concat(y)] === undefined)) {
-                _context3.next = 18;
+                _context3.next = 22;
                 break;
               }
               _context3.next = 4;
@@ -5696,25 +5939,30 @@ var GameEngine = /*#__PURE__*/function () {
               return this.describer.describeRoom(room);
             case 8:
               narration = _context3.sent;
-              room["narration"] = narration;
-              _context3.next = 12;
+              _context3.next = 11;
               return this.designer.DesignRoom(narration);
-            case 12:
+            case 11:
               ambience = _context3.sent;
+              _context3.next = 14;
+              return this.composer.ComposeMusic(narration);
+            case 14:
+              music = _context3.sent;
+              room["music"] = music;
               room["ambience"] = ambience;
+              room["narration"] = narration;
 
               // Update the gameMap
               this.gameMap.rooms["".concat(x, ",").concat(y)] = room;
               //update cellInfo
               cellInfo.room = room;
-              _context3.next = 20;
+              _context3.next = 24;
               break;
-            case 18:
+            case 22:
               if (LOG) {
-                relayMessage("Cell is already occupied.");
+                relayMessage("Cell is already occupied.", "system");
               }
               return _context3.abrupt("return", null);
-            case 20:
+            case 24:
             case "end":
               return _context3.stop();
           }
@@ -5799,6 +6047,7 @@ var GameEngine = /*#__PURE__*/function () {
       var isNew = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
       var node = null;
       var link = null;
+
       // Add nodes and links for the path taken
       for (var i = 0; i < this.player.pathTaken.length; i++) {
         var cell = this.player.pathTaken[i];
@@ -5909,7 +6158,7 @@ var GameEngine = /*#__PURE__*/function () {
               this.quit();
               return _context4.abrupt("break", 23);
             case 21:
-              relayMessage("Invalid command.");
+              relayMessage("Invalid command.", "system");
               return _context4.abrupt("break", 23);
             case 23:
               return _context4.abrupt("return", moved);
@@ -5944,7 +6193,7 @@ var GameEngine = /*#__PURE__*/function () {
                 _context5.next = 4;
                 break;
               }
-              relayMessage("There's nothing here.");
+              relayMessage("There's nothing here.", "system");
               return _context5.abrupt("return");
             case 4:
               if (!(!currentRoom["narration"] && GENERATE)) {
@@ -5958,8 +6207,8 @@ var GameEngine = /*#__PURE__*/function () {
               currentRoom["narration"] = narration;
             case 9:
               // Display room description (you might need to parse JSON here)
-              relayMessage(currentRoom["narration"]);
-              relayMessage(currentRoom["ambience"]);
+              relayMessage(currentRoom["narration"], "user");
+              if (typeof process === "undefined" && window) this.setMood(currentRoom);
             case 11:
             case "end":
               return _context5.stop();
@@ -5970,14 +6219,50 @@ var GameEngine = /*#__PURE__*/function () {
         return _look.apply(this, arguments);
       }
       return look;
-    }()
+    }())
+  }, {
+    key: "setMood",
+    value: function setMood(room) {
+      // Set the background
+      this.changeAmbience(room["ambience"]);
+      this.playMusic(room["music"]);
+    }
+  }, {
+    key: "changeAmbience",
+    value: function changeAmbience(gradientColors) {
+      var gradientString = "linear-gradient(-45deg, ".concat(gradientColors.join(', '), ")");
+      document.body.style.transition = 'background 5s ease-in-out';
+      document.body.style.background = gradientString;
+      document.body.style.backgroundSize = '400% 400%'; // Ensure animation works
+
+      var bestContrastColor = this.designer.bestContrastColor(gradientColors);
+      document.body.style.color = bestContrastColor;
+      var elements = document.getElementById("graph").getElementsByClassName("legend-text");
+
+      // Loop through each element and change its fill color
+      for (var i = 0; i < elements.length; i++) {
+        elements[i].style.fill = bestContrastColor;
+      }
+    }
+  }, {
+    key: "playMusic",
+    value: function playMusic(music) {
+      try {
+        this.musicPlayer = this.conductor.load(music);
+        this.musicPlayer.loop(true);
+        var MUSIC = typeof process !== "undefined" ? false : window.MUSIC === true;
+        MUSIC && this.musicPlayer.play();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     /**
      * Move the player in the specified direction.
      *
      * @param {string} direction - The direction to move the player. Valid directions are "north", "south", "east", and "west".
      * @return {Promise<boolean>} A promise that resolves to true if the player moved successfully, or false if the direction is invalid.
      */
-    )
   }, {
     key: "move",
     value: (function () {
@@ -5989,7 +6274,7 @@ var GameEngine = /*#__PURE__*/function () {
               // Check if the direction is valid and there's an exit
               exits = this.gameMap.getCell(this.player.x, this.player.y).exits;
               if (!exits[direction]) {
-                _context6.next = 27;
+                _context6.next = 29;
                 break;
               }
               _context6.t0 = direction;
@@ -6008,34 +6293,39 @@ var GameEngine = /*#__PURE__*/function () {
               this.player.x--;
               return _context6.abrupt("break", 13);
             case 13:
+              relayMessage("You move ".concat(direction, ".\n"), "user");
+
+              // Generate the room if it hasn't been generated yet
               if (!(!this.gameMap.rooms["".concat(this.player.x, ",").concat(this.player.y)] && GENERATE)) {
-                _context6.next = 16;
+                _context6.next = 17;
                 break;
               }
-              _context6.next = 16;
+              _context6.next = 17;
               return this.generateRoomAndUpdateMap(this.player.x, this.player.y);
-            case 16:
+            case 17:
               this.player.pathTaken.push({
                 x: this.player.x,
                 y: this.player.y
               }); // Add new position to pathTaken
-              relayMessage("You move ".concat(direction, ".\n"));
               LOG && this.showPathTaken();
-              _context6.next = 21;
-              return this.look();
-            case 21:
               if (!(this.player.x === this.gameMap.end.x && this.player.y === this.gameMap.end.y)) {
                 _context6.next = 24;
                 break;
               }
-              _context6.next = 24;
+              _context6.next = 22;
               return this.endGame();
+            case 22:
+              _context6.next = 26;
+              break;
             case 24:
+              _context6.next = 26;
+              return this.look();
+            case 26:
               return _context6.abrupt("return", true);
-            case 27:
-              relayMessage("You can't go that way.");
-              return _context6.abrupt("return", false);
             case 29:
+              relayMessage("You tried to go '" + direction + "', but you can't go that way.", "system");
+              return _context6.abrupt("return", false);
+            case 31:
             case "end":
               return _context6.stop();
           }
@@ -6110,21 +6400,32 @@ var GameEngine = /*#__PURE__*/function () {
     value: (function () {
       var _endGame = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
         var _this3 = this;
-        var roomsVisited, journeyDescription;
+        var currentRoom, narration, roomsVisited, journeyDescription;
         return _regeneratorRuntime().wrap(function _callee7$(_context7) {
           while (1) switch (_context7.prev = _context7.next) {
             case 0:
+              currentRoom = this.gameMap.rooms["".concat(this.player.x, ",").concat(this.player.y)];
+              if (!(!currentRoom["narration"] && GENERATE)) {
+                _context7.next = 6;
+                break;
+              }
+              _context7.next = 4;
+              return this.describer.describeRoom(currentRoom);
+            case 4:
+              narration = _context7.sent;
+              currentRoom["narration"] = narration;
+            case 6:
               roomsVisited = this.player.pathTaken.map(function (pos) {
                 return _this3.gameMap.rooms["".concat(pos.x, ",").concat(pos.y)];
               });
-              _context7.next = 3;
+              _context7.next = 9;
               return this.describer.describeJourney(roomsVisited);
-            case 3:
+            case 9:
               journeyDescription = _context7.sent;
-              relayMessage("\nCongratulations! You have reached the end of the game!");
+              relayMessage("You've reached the end of the game! Here's your story:", "system");
               relayMessage(journeyDescription);
               this.quit();
-            case 7:
+            case 13:
             case "end":
               return _context7.stop();
           }
@@ -6144,7 +6445,6 @@ var GameEngine = /*#__PURE__*/function () {
   }, {
     key: "quit",
     value: function quit() {
-      relayMessage("Thanks for playing!");
       if (typeof process !== "undefined" && process.exit) {
         process.exit(0); // Exit the game in Node.js environment
       }
@@ -6671,16 +6971,19 @@ module.exports = {
 /***/ ((module) => {
 
 // Modify console.log statements to work in both Node.js and browser environments
-var logMessage = function logMessage(message) {
+var relayMessage = function relayMessage(message, type) {
   if (typeof window === "undefined") {
     console.log(message);
   } else {
     window.LOG && console.log(message);
-    window.message = message;
+    window.message = {
+      message: message,
+      type: type
+    };
   }
 };
 module.exports = {
-  "default": logMessage
+  "default": relayMessage
 };
 
 /***/ }),
@@ -6814,23 +7117,19 @@ var RoomGenerator = /*#__PURE__*/function () {
               console.error("[ERROR]: Cannot validate generated room");
               return _context.abrupt("return", null);
             case 11:
-              if (LOG) {
-                relayMessage("[INFO] Room generated", generatedRoom);
-              }
               return _context.abrupt("return", generatedRoom);
-            case 13:
-              _context.next = 19;
+            case 12:
+              _context.next = 17;
               break;
-            case 15:
-              _context.prev = 15;
+            case 14:
+              _context.prev = 14;
               _context.t0 = _context["catch"](4);
-              relayMessage(_context.t0);
               return _context.abrupt("return", null);
-            case 19:
+            case 17:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[4, 15]]);
+        }, _callee, this, [[4, 14]]);
       }));
       function generateRoom(_x) {
         return _generateRoom.apply(this, arguments);
@@ -49391,14 +49690,31 @@ var __webpack_exports__ = {};
 /*!******************!*\
   !*** ./index.js ***!
   \******************/
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 var GameMap = (__webpack_require__(/*! ./game/game-map.js */ "./game/game-map.js")["default"]);
 var GameEngine = (__webpack_require__(/*! ./game/game-engine.js */ "./game/game-engine.js")["default"]);
-var MAP_SIZE = window.MAP_SIZE ? window.MAP_SIZE : 5; // Adjust the map size as needed
-var LOG = window.LOG ? window.LOG : false;
+var MAP_SIZE = window.MAP_SIZE || 5;
+var LOG = window.LOG || false;
+window.MUSIC = typeof process === "undefined" || !process.env.BROWSER;
+var ENGINE = null;
+
+/**
+ * Watches a variable and triggers a callback whenever the value changes.
+ *
+ * @param {Object} obj - The object containing the variable to watch.
+ * @param {string} propName - The name of the variable to watch.
+ * @param {Function} callback - The callback function to trigger when the value changes.
+ *                             It receives the new value and the old value as parameters.
+ */
 function watchVariable(obj, propName, callback) {
   var value = obj[propName];
   Object.defineProperty(obj, propName, {
@@ -49414,6 +49730,69 @@ function watchVariable(obj, propName, callback) {
     }
   });
 }
+
+/**
+ * Adds a change event listener to the mute switch element.
+ *
+ * @param {Event} event - The event object representing the change event.
+ */
+document.getElementById("muteSwitch").addEventListener("change", function (event) {
+  if (event.target.checked) {
+    window.MUSIC = true;
+    ENGINE.player && ENGINE.musicPlayer.play();
+  } else {
+    window.MUSIC = false;
+    ENGINE.player && ENGINE.musicPlayer.pause();
+  }
+});
+
+/**
+ * Initializes the application by setting up event listeners, creating a GameMap,
+ * creating a GameEngine, and generating D3 data for rendering a graph.
+ *
+ * @return {Promise<void>} A Promise that resolves when the initialization is complete.
+ */
+function init() {
+  return _init.apply(this, arguments);
+}
+/**
+ * Types out a message character by character in the specified element with the given speed.
+ *
+ * @param {HTMLElement} element - The element where the message will be typed.
+ * @param {string} message - The message to be typed.
+ * @param {number} speed - The speed at which each character will be typed (in milliseconds).
+ */
+function _init() {
+  _init = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+    var gameMap, _ENGINE$generateD3Dat, nodes, links;
+    return _regeneratorRuntime().wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
+        case 0:
+          watchVariable(window, "message", function (newValue, oldValue) {
+            if (newValue !== oldValue) {
+              var message = newValue.message,
+                type = newValue.type;
+              appendMessage(message, type);
+              scrollToBottom();
+            }
+          });
+          gameMap = new GameMap(MAP_SIZE);
+          LOG && gameMap.display();
+          _context.next = 5;
+          return new GameEngine(gameMap);
+        case 5:
+          ENGINE = _context.sent;
+          // Generate D3 data and render the graph
+          _ENGINE$generateD3Dat = ENGINE.generateD3Data(true), nodes = _ENGINE$generateD3Dat.nodes, links = _ENGINE$generateD3Dat.links;
+          GRAPH.init(nodes, links);
+        case 8:
+        case "end":
+          return _context.stop();
+      }
+    }, _callee);
+  }));
+  return _init.apply(this, arguments);
+}
 function typeMessage(element, message, speed) {
   var i = 0;
   function type() {
@@ -49425,102 +49804,130 @@ function typeMessage(element, message, speed) {
   }
   type();
 }
-function appendMessage(message) {
+
+/**
+ * Appends a message to the "messages" div element and types out the message character by character.
+ *
+ * @param {string} message - The message to be appended and typed.
+ * @param {string} type - The type of message (e.g., "user" or "system").
+ * @return {void} This function does not return a value.
+ */
+function appendMessage(message, type) {
   var messagesDiv = document.getElementById("messages");
   var messageElement = document.createElement("div");
+
+  // Apply a different class based on the type
+  if (type === "user") {
+    messageElement.className = "message user-message";
+  } else if (type === "system") {
+    messageElement.className = "message system-message";
+    // Add event listener to remove the message on click
+    messageElement.addEventListener('click', function () {
+      messageElement.remove();
+    });
+  }
+
+  // Append the message to the messages div
   messagesDiv.appendChild(messageElement);
-  messageElement.className = 'message';
-  messages.appendChild(messageElement);
+
+  // Type out the message
   typeMessage(messageElement, message, 25);
 }
+
+/**
+ * Parses the input string into a command and arguments.
+ *
+ * @param {string} input - The input string to be parsed.
+ * @return {Object} An object containing the command and arguments.
+ */
 function parseInput(input) {
-  var parts = input.trim().split(" ");
-  var cmd = parts[0];
-  var args = parts[1];
+  var _input$trim$split = input.trim().split(" "),
+    _input$trim$split2 = _slicedToArray(_input$trim$split, 2),
+    cmd = _input$trim$split2[0],
+    _input$trim$split2$ = _input$trim$split2[1],
+    args = _input$trim$split2$ === void 0 ? "" : _input$trim$split2$;
   return {
     cmd: cmd,
     args: args
   };
 }
-var run = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-    var gameMap, engine, input, _engine$generateD3Dat2, nodes, links;
+document.getElementById("input").addEventListener("keydown", handleInput);
+
+/**
+ * Handles the input event when the Enter key is pressed. Parses the input value, executes the command,
+ * updates the graph if necessary, and displays the game map if logging is enabled.
+ *
+ * @param {Event} event - The input event object.
+ * @return {Promise<void>} A promise that resolves when the function completes.
+ */
+function handleInput(_x) {
+  return _handleInput.apply(this, arguments);
+}
+/**
+ * Asynchronously updates the graph by generating D3 data and updating the visualization.
+ *
+ * @return {Promise<void>} A promise that resolves when the graph is updated.
+ */
+function _handleInput() {
+  _handleInput = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(event) {
+    var value, messageElement, messagesDiv, _parseInput, cmd, args, result;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
-          watchVariable(window, "message", function (newValue, oldValue) {
-            if (_typeof(newValue) === "object") {
-              var applyGradient = function applyGradient(gradientColors) {
-                var gradientString = "linear-gradient(-45deg, ".concat(gradientColors.join(', '), ")");
-                document.body.style.background = gradientString;
-                document.body.style.backgroundSize = '400% 400%'; // Ensure animation works
-              };
-              applyGradient(newValue);
-            } else if (newValue !== oldValue) {
-              appendMessage(newValue);
-            }
-          });
-          gameMap = new GameMap(MAP_SIZE);
-          LOG && gameMap.display();
-          _context2.next = 5;
-          return new GameEngine(gameMap);
-        case 5:
-          engine = _context2.sent;
-          input = document.getElementById("input");
-          input.addEventListener("keydown", /*#__PURE__*/function () {
-            var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-              var messageElement, _parseInput, cmd, args, moved, _engine$generateD3Dat, _nodes, _links, currentNode;
-              return _regeneratorRuntime().wrap(function _callee$(_context) {
-                while (1) switch (_context.prev = _context.next) {
-                  case 0:
-                    if (!(event.key === "Enter")) {
-                      _context.next = 13;
-                      break;
-                    }
-                    messageElement = document.createElement('div');
-                    messageElement.className = 'message';
-                    messages.appendChild(messageElement);
-                    typeMessage(messageElement, input.value, 50);
-
-                    // Execute the command
-                    _parseInput = parseInput(input.value), cmd = _parseInput.cmd, args = _parseInput.args;
-                    _context.next = 8;
-                    return engine.executeCommand(cmd, args);
-                  case 8:
-                    moved = _context.sent;
-                    if (moved) {
-                      // Generate D3 data and render the graph
-                      _engine$generateD3Dat = engine.generateD3Data(false), _nodes = _engine$generateD3Dat.nodes, _links = _engine$generateD3Dat.links, currentNode = _engine$generateD3Dat.currentNode;
-                      GRAPH.updateVisualization(_nodes, _links, currentNode, false);
-                    }
-                    input.value = "";
-                    input.focus();
-                    LOG && gameMap.display();
-                  case 13:
-                  case "end":
-                    return _context.stop();
-                }
-              }, _callee);
-            }));
-            return function (_x) {
-              return _ref2.apply(this, arguments);
-            };
-          }());
-
-          // Generate D3 data and render the graph
-          _engine$generateD3Dat2 = engine.generateD3Data(true), nodes = _engine$generateD3Dat2.nodes, links = _engine$generateD3Dat2.links;
-          GRAPH.init(nodes, links);
-        case 10:
+          if (!(event.key === "Enter")) {
+            _context2.next = 14;
+            break;
+          }
+          value = event.target.value.trim();
+          event.target.value = "";
+          event.target.focus();
+          messageElement = document.createElement("div");
+          messageElement.className = "message";
+          messagesDiv = document.getElementById("messages");
+          messagesDiv.appendChild(messageElement);
+          _parseInput = parseInput(value), cmd = _parseInput.cmd, args = _parseInput.args;
+          _context2.next = 11;
+          return ENGINE.executeCommand(cmd, args);
+        case 11:
+          result = _context2.sent;
+          if (result && (cmd === "move" || cmd === "go")) {
+            updateGraph();
+          } else if (!result) {
+            // SHOW ERROR MESSAGE
+          }
+          LOG && ENGINE.gameMap.display();
+        case 14:
         case "end":
           return _context2.stop();
       }
     }, _callee2);
   }));
-  return function run() {
-    return _ref.apply(this, arguments);
-  };
-}();
-run();
+  return _handleInput.apply(this, arguments);
+}
+function updateGraph() {
+  return _updateGraph.apply(this, arguments);
+}
+function _updateGraph() {
+  _updateGraph = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+    var _ENGINE$generateD3Dat2, nodes, links, currentNode;
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          _ENGINE$generateD3Dat2 = ENGINE.generateD3Data(false), nodes = _ENGINE$generateD3Dat2.nodes, links = _ENGINE$generateD3Dat2.links, currentNode = _ENGINE$generateD3Dat2.currentNode;
+          GRAPH.updateVisualization(nodes, links, currentNode, false);
+        case 2:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3);
+  }));
+  return _updateGraph.apply(this, arguments);
+}
+function scrollToBottom() {
+  var messagesDiv = document.getElementById("messages");
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+init();
 /******/ })()
 ;
 //# sourceMappingURL=bundle.js.map

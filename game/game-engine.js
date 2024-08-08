@@ -292,18 +292,16 @@ class GameEngine {
     }
 
     // Display room description (you might need to parse JSON here)
-    relayMessage(currentRoom["narration"], "system");
+    relayMessage(currentRoom["narration"], "user");
 
     if (typeof process === "undefined" && window)
       this.setMood(currentRoom);
   }
 
   setMood(room) {
-    const MUSIC = typeof process !== "undefined" ? false : window.MUSIC === true;
-
     // Set the background
     this.changeAmbience(room["ambience"]);
-    MUSIC && this.playMusic(room["music"]);
+    this.playMusic(room["music"]);
   }
 
   changeAmbience(gradientColors) {
@@ -329,7 +327,9 @@ class GameEngine {
       this.musicPlayer = this.conductor.load(music);
       this.musicPlayer.loop(true);
 
-      this.musicPlayer.play();
+      const MUSIC = typeof process !== "undefined" ? false : window.MUSIC === true;
+
+      MUSIC &&this.musicPlayer.play();
 
     } catch (error) {
       console.error(error);
@@ -372,10 +372,10 @@ class GameEngine {
       this.player.pathTaken.push({ x: this.player.x, y: this.player.y }); // Add new position to pathTaken
       LOG && this.showPathTaken();
 
-      await this.look(); // Automatically look around after moving
-
       if (this.player.x === this.gameMap.end.x && this.player.y === this.gameMap.end.y) {
         await this.endGame();
+      } else {
+        await this.look(); // Automatically look around after moving
       }
 
       return true;
@@ -437,10 +437,18 @@ class GameEngine {
    * @return {Promise<void>} A promise that resolves when the game has ended and the player has been logged out.
    */
   async endGame() {
+    const currentRoom = this.gameMap.rooms[`${this.player.x},${this.player.y}`];
+
+    if (!currentRoom["narration"] && GENERATE) {
+      const narration = await this.describer.describeRoom(currentRoom);
+      currentRoom["narration"] = narration;
+    }
+
     const roomsVisited = this.player.pathTaken.map(
       (pos) => this.gameMap.rooms[`${pos.x},${pos.y}`]
     );
     const journeyDescription = await this.describer.describeJourney(roomsVisited);
+    relayMessage("You've reached the end of the game! Here's your story:", "system");
     relayMessage(journeyDescription);
 
     this.quit();
