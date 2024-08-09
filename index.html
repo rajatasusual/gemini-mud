@@ -32,14 +32,21 @@
     window.GoogleGenerativeAI = GoogleGenerativeAI;
     window.Ajv = window.ajv7;
 
-    window.API_KEY = "your_api_key_here";
-
-    window.MAP_SIZE = 3;
+    window.MAP_SIZE = 5;
     window.LOG = false;
     window.GENERATE = true;
   </script>
   <script src="graph.js"></script>
   <script src="dist/bundle.js" defer></script>
+
+  <div id="apiKeyPopup">
+    <div class="content">
+      <img src="llama.png" alt="Llama Logo">
+      <p>Please enter your API key:</p>
+      <input type="text" id="apiKeyInput" placeholder="Your API Key">
+      <button id="saveApiKey">Save</button>
+    </div>
+  </div>
 
   <div id="container">
     <!-- HTML -->
@@ -51,7 +58,7 @@
     <div id="chat">
       <div id="messages"></div>
     </div>
-    <div id="scrollIndicator" class="hidden">&#9660;</div> 
+    <div id="scrollIndicator" class="hidden">&#9660;</div>
     <div id="map">
       <svg id="graph"></svg>
     </div>

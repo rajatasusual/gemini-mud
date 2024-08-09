@@ -3,7 +3,6 @@ let dotenv;
 let Ajv;
 
 const diskSchema = require("./game-schema").default;
-const relayMessage = require("./logger").default;
 
 // Add a check to avoid using Node.js specific 'dotenv' in browser environment
 if (typeof window === "undefined") {
@@ -16,9 +15,6 @@ if (typeof window === "undefined") {
   GoogleGenerativeAI = window.GoogleGenerativeAI;
   Ajv = window.ajv7;
 }
-
-const API_KEY = typeof process !== "undefined" && process.env ? process.env.API_KEY : window.API_KEY;
-const LOG = typeof process !== "undefined" && process.env ? process.env.LOG === "true" : window.LOG === true;
 
 /**
  * RoomGenerator class generates rooms for a MUD-style game using Generative AI.
@@ -52,7 +48,10 @@ class RoomGenerator {
    * @return {Promise<GenerativeModel>} A promise that resolves to a generative model.
    */
   getModel() {
-    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    const apiKey = typeof process !== "undefined" && process.env ? process.env.API_KEY : window.API_KEY;
+
+    const genAI = new GoogleGenerativeAI(apiKey);
 
     return genAI.getGenerativeModel({
       model: "gemini-1.5-pro",

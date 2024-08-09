@@ -11,6 +11,39 @@ let ENGINE = null;
 
 // Utility Functions
 
+function showApiKeyPopup() {
+  document.getElementById('apiKeyPopup').style.display = 'block';
+}
+
+// Function to save the API key (using LocalStorage for better security)
+function saveApiKey() {
+  const apiKey = document.getElementById('apiKeyInput').value;
+  if (apiKey) {
+    localStorage.setItem('apiKey', apiKey); // Store in LocalStorage
+    window.API_KEY = apiKey; // Also set it in the window object for immediate use
+    document.getElementById('apiKeyPopup').style.display = 'none';
+
+    buildGame();
+  } else {
+    alert('Please enter an API key.');
+  }
+}
+
+function checkAccess() {
+  
+  document.getElementById('saveApiKey').addEventListener('click', saveApiKey);
+
+  // Check if API key exists in LocalStorage, and use it if available
+  const storedApiKey = localStorage.getItem('apiKey');
+  if (storedApiKey) {
+    window.API_KEY = storedApiKey;
+
+    return true;
+  } else {
+    return false;
+  }
+}
+
 /**
  * Watches a variable and triggers a callback whenever the value changes.
  *
@@ -155,13 +188,7 @@ function scrollToBottom() {
 
 // Game Initialization and Control
 
-/**
- * Initializes the application by setting up event listeners, creating a GameMap,
- * creating a GameEngine, and generating D3 data for rendering a graph.
- *
- * @return {Promise<void>} A Promise that resolves when the initialization is complete.
- */
-async function init() {
+async function buildGame() {
   watchVariable(window, "message", (newValue, oldValue) => {
     if (newValue !== oldValue) {
       const { message, type } = newValue;
@@ -183,6 +210,23 @@ async function init() {
   const { nodes, links } = ENGINE.generateD3Data(true);
 
   GRAPH.init(nodes, links);
+}
+
+/**
+ * Initializes the application by setting up event listeners, creating a GameMap,
+ * creating a GameEngine, and generating D3 data for rendering a graph.
+ *
+ * @return {Promise<void>} A Promise that resolves when the initialization is complete.
+ */
+async function init() {
+
+  const access = checkAccess();
+
+  if (!access) {
+    showApiKeyPopup();
+  } else {
+    await buildGame();
+  }
 }
 
 /**
