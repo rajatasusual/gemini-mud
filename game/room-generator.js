@@ -33,7 +33,8 @@ class RoomGenerator {
    *
    * @return {void}
    */
-  constructor() {
+  constructor(userPreferences) {
+    this.userPreferences = userPreferences;
     const ajv = new Ajv({ strict: false });
     this.schema = diskSchema.properties.rooms.items;
     this.validate = ajv.compile(this.schema);
@@ -65,7 +66,10 @@ class RoomGenerator {
       You will receive a cell information object as input and total number of exits as arguments.
 
       Additional details:
-      - If it's a start room, it should feel welcoming and inviting. Setup a fantasy theme.
+      - The name of the player is ${this.userPreferences.name}.
+      - The game takes place in "${this.userPreferences.era}".
+      - The genre of the game is "${this.userPreferences.mood}".
+      - If it's a start room, it should setup the character and echo the era and introduce the mood.
       - If it's an end room, there should be a sense of accomplishment and maybe a reward.
       - If it's a win path room, it should provide clues or hints to the player.
       - If it's a dead end, it might feel more cramped or desolate, with potential traps or red herrings.

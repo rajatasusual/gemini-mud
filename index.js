@@ -2,10 +2,56 @@
 const GameMap = require("./game/game-map.js").default;
 const GameEngine = require("./game/game-engine.js").default;
 
+let attribute = null;
+let userPreferences = {};
+
+const fsm = new StateMachine({
+  init: 'start',
+  transitions: [
+    { name: 'checkAccess', from: 'start', to: 'init' },
+    { name: 'getPreferences', from: 'init', to: 'build' },
+    { name: 'introduce', from: 'build', to: 'intro' },
+    { name: 'play', from: 'intro', to: 'game' },
+    { name: 'restart', from: 'game', to: 'start' }
+  ],
+  methods: {
+    /**
+     * Initializes the application by setting up event listeners, creating a GameMap,
+     * creating a GameEngine, and generating D3 data for rendering a graph.
+     *
+     * @return {Promise<void>} A Promise that resolves when the initialization is complete.
+     */
+    onCheckAccess: function () {
+      checkAccess();
+    },
+    onGetPreferences: function () {
+      buildGame();
+    },
+    onIntroduce: function () {
+      introduce();
+    },
+    onPlay: function () {
+      runGame();
+    },
+    onRestart: function () {
+      built = false;
+    }
+  }
+});
+
 // Configuration and global variables
 const MAP_SIZE = window.MAP_SIZE || 5;
 const LOG = window.LOG || false;
-window.MUSIC = typeof process === "undefined" || !process.env.BROWSER;
+window.MUSIC = typeof process === "undefined" || !process.env.BROWSER ? false : (localStorage.getItem('music') || true);
+
+if (window.MUSIC) {
+  document.getElementById("muteSwitch").checked = true;
+} else {
+  document.getElementById("muteSwitch").checked = false;
+}
+
+let built = false;
+let introduced = false;
 
 let ENGINE = null;
 
@@ -15,7 +61,14 @@ function showApiKeyPopup() {
   document.getElementById('apiKeyPopup').style.display = 'block';
 }
 
-// Function to save the API key (using LocalStorage for better security)
+
+/**
+ * Saves the provided API key in LocalStorage and sets it in the window object for immediate use.
+ * If the API key is successfully saved, it hides the API key popup and triggers the fsm.getPreferences() function.
+ * If no API key is provided, it displays an alert prompting the user to enter an API key.
+ *
+ * @return {void}
+ */
 function saveApiKey() {
   const apiKey = document.getElementById('apiKeyInput').value;
   if (apiKey) {
@@ -23,14 +76,20 @@ function saveApiKey() {
     window.API_KEY = apiKey; // Also set it in the window object for immediate use
     document.getElementById('apiKeyPopup').style.display = 'none';
 
-    buildGame();
+    fsm.getPreferences();
   } else {
     alert('Please enter an API key.');
   }
 }
 
-function checkAccess() {
-  
+/**
+ * Checks if an API key exists in LocalStorage and uses it if available.
+ * If no API key is found, it displays a popup to enter the API key.
+ *
+ * @return {Promise<void>}
+ */
+async function checkAccess() {
+
   document.getElementById('saveApiKey').addEventListener('click', saveApiKey);
 
   // Check if API key exists in LocalStorage, and use it if available
@@ -38,9 +97,11 @@ function checkAccess() {
   if (storedApiKey) {
     window.API_KEY = storedApiKey;
 
-    return true;
+    setTimeout(() => {
+      fsm.getPreferences();
+    }, 10);
   } else {
-    return false;
+    showApiKeyPopup();
   }
 }
 
@@ -100,8 +161,8 @@ function appendMessage(message, type) {
   // Apply a different class based on the type
   if (type === "user") {
     messageElement.className = "message user-message";
-  } else if (type === "system") {
-    messageElement.className = "message system-message";
+  } else {
+    messageElement.className = `message ${type === "system" ? "system-message" : "general-message"}`;
     // Add event listener to remove the message on click
     messageElement.addEventListener('click', () => {
       messageElement.remove();
@@ -136,9 +197,11 @@ document.getElementById("muteSwitch").addEventListener("change", (event) => {
   if (event.target.checked) {
     window.MUSIC = true;
     ENGINE.player && ENGINE.musicPlayer.play();
+    localStorage.setItem('music', true);
   } else {
     window.MUSIC = false;
     ENGINE.player && ENGINE.musicPlayer.pause();
+    localStorage.setItem('music', false);
   }
 });
 
@@ -146,6 +209,11 @@ document.getElementById("input").addEventListener("keydown", handleInput);
 
 // Loading Screen Functions
 
+/**
+ * Displays the loading screen by removing the hidden class and adding a show class after a short delay.
+ *
+ * @return {void}
+ */
 function showLoadingScreen() {
   const loadingScreen = document.getElementById("loading-screen");
   loadingScreen.classList.remove("hidden"); // Ensure it's not hidden
@@ -154,6 +222,11 @@ function showLoadingScreen() {
   }, 10); // Small delay to ensure the transition applies
 }
 
+/**
+ * Hides the loading screen element by removing the 'show' class and adding the 'hidden' class after a short delay.
+ *
+ * @return {void}
+ */
 function hideLoadingScreen() {
   const loadingScreen = document.getElementById("loading-screen");
   loadingScreen.classList.remove("show"); // Start the fade-out
@@ -167,6 +240,11 @@ function hideLoadingScreen() {
 
 // Scroll Indicator Functions
 
+/**
+ * Toggles the visibility of the scroll indicator based on the scroll position of the messages div.
+ *
+ * @return {void}
+ */
 function showHideScrollIndicator() {
   const messagesDiv = document.getElementById("messages");
   const scrollIndicator = document.getElementById("scrollIndicator");
@@ -181,6 +259,11 @@ function showHideScrollIndicator() {
   }
 }
 
+/**
+ * Scrolls the messages container to the bottom.
+ *
+ * @return {void}
+ */
 function scrollToBottom() {
   const messagesDiv = document.getElementById("messages");
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -188,7 +271,55 @@ function scrollToBottom() {
 
 // Game Initialization and Control
 
-async function buildGame() {
+/**
+ * Builds a game by guiding the user through a series of questions to gather preferences.
+ *
+ * @param {string} value - The user's response to the current question.
+ * @return {undefined}
+ */
+async function buildGame(value) {
+  if (!attribute) {
+    appendMessage("Alright then, Adventurer. What do I call you?", "general");
+    attribute = "name";
+  } else {
+    switch (attribute) {
+      case "name":
+        appendMessage("I'm going to call you " + value + ". Now, when does this adventure take place?", "general");
+        userPreferences["name"] = value;
+        attribute = "era";
+        break;
+      case "era":
+        appendMessage("That's great. What is the genre of your adventure?", "general");
+        userPreferences["era"] = value;
+        attribute = "mood";
+        break;
+      case "mood":
+        appendMessage("Perfect. We have all we need to start you on your adventure.", "general");
+        userPreferences["mood"] = value;
+        fsm.introduce();
+        break;
+    }
+  }
+
+}
+
+/**
+ * Introduces the game to the player by providing instructions on how to navigate and start the game.
+ *
+ * @return {void}
+ */
+function introduce() {
+  appendMessage("The steps are simple, mate. It will evolve but for now it is just a crawler. You want to go north, you  type 'go north'. You want to go south, you type 'go south'. You get the idea. Now, type 'start' to begin.", "general");
+  introduced = true;
+}
+
+/**
+ * Initializes and starts the game by setting up the game map, engine, and rendering the graph.
+ * 
+ * @async
+ * @return {Promise<void>}
+ */
+async function runGame() {
   watchVariable(window, "message", (newValue, oldValue) => {
     if (newValue !== oldValue) {
       const { message, type } = newValue;
@@ -202,7 +333,7 @@ async function buildGame() {
   const gameMap = new GameMap(MAP_SIZE);
   LOG && gameMap.display();
 
-  ENGINE = await new GameEngine(gameMap);
+  ENGINE = await new GameEngine(gameMap, userPreferences);
 
   hideLoadingScreen();
 
@@ -210,23 +341,6 @@ async function buildGame() {
   const { nodes, links } = ENGINE.generateD3Data(true);
 
   GRAPH.init(nodes, links);
-}
-
-/**
- * Initializes the application by setting up event listeners, creating a GameMap,
- * creating a GameEngine, and generating D3 data for rendering a graph.
- *
- * @return {Promise<void>} A Promise that resolves when the initialization is complete.
- */
-async function init() {
-
-  const access = checkAccess();
-
-  if (!access) {
-    showApiKeyPopup();
-  } else {
-    await buildGame();
-  }
 }
 
 /**
@@ -242,25 +356,54 @@ async function handleInput(event) {
     event.target.value = "";
     event.target.focus();
 
-    const { cmd, args } = parseInput(value);
 
-    showLoadingScreen();
+    switch (fsm.state) {
+      case "build":
+        appendMessage(value, "user");
+        buildGame(value);
+        break;
+      case "intro":
+        if (value.toLowerCase() === "start") {
+          document.getElementById("messages").innerHTML = "";
+          fsm.play();
+        }
+        break;
+      case "game":
+        interpretCommand(value);
+        break;
 
-    const result = await ENGINE.executeCommand(cmd, args);
-
-    setTimeout(() => {
-      hideLoadingScreen();
-    }, 50);
-
-    if (result && (cmd === "move" || cmd === "go")) {
-      updateGraph();
-    } else if (!result) {
-      // SHOW ERROR MESSAGE
+      default:
+        break;
     }
-
-    LOG && ENGINE.gameMap.display();
   }
 }
+
+/**
+ * Interprets and executes a user command, updating the game state and graph as necessary.
+ *
+ * @param {string} value - The user input command to be interpreted.
+ * @return {Promise<void>} A promise that resolves when the command has been executed.
+ */
+async function interpretCommand(value) {
+  const { cmd, args } = parseInput(value);
+
+  showLoadingScreen();
+
+  const result = await ENGINE.executeCommand(cmd, args);
+
+  setTimeout(() => {
+    hideLoadingScreen();
+  }, 50);
+
+  if (result && (cmd === "move" || cmd === "go")) {
+    updateGraph();
+  } else if (!result) {
+    // SHOW ERROR MESSAGE
+  }
+
+  LOG && ENGINE.gameMap.display();
+}
+
 
 /**
  * Asynchronously updates the graph by generating D3 data and updating the visualization.
@@ -272,5 +415,6 @@ async function updateGraph() {
   GRAPH.updateVisualization(nodes, links, currentNode, false);
 }
 
-// Start the game initialization
-init();
+
+// Check Access and Start this baby!
+fsm.checkAccess();

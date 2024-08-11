@@ -1,6 +1,6 @@
 {
   "name": "gemini-mud",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "A MUD-style text adventure game powered by Google Gemini AI",
   "main": "game/start.js",
   "scripts": {

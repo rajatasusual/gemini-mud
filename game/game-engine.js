@@ -28,9 +28,10 @@ class GameEngine {
    * @param {Object} gameMap - The game map object.
    * @return {Promise<GameEngine>} A promise that resolves to the initialized GameEngine instance.
    */
-  constructor(gameMap) {
+  constructor(gameMap, userPreferences) {
+
     this.gameMap = gameMap;
-    this.roomGenerator = new RoomGenerator(); // Instantiate the RoomGenerator
+    this.roomGenerator = new RoomGenerator(userPreferences); // Instantiate the RoomGenerator
     this.describer = new Describer();
     this.designer = new Designer();
     this.composer = new Composer();
@@ -174,7 +175,7 @@ class GameEngine {
   generateD3Data(isNew = true) {
     let node = null;
     let link = null;
-    
+
     // Add nodes and links for the path taken
     for (let i = 0; i < this.player.pathTaken.length; i++) {
       const cell = this.player.pathTaken[i];
@@ -324,13 +325,13 @@ class GameEngine {
   playMusic(music) {
     try {
       this.musicPlayer && this.musicPlayer.stop(true);
-      
+
       this.musicPlayer = this.conductor.load(music);
       this.musicPlayer.loop(true);
 
       const MUSIC = typeof process !== "undefined" ? false : window.MUSIC === true;
 
-      MUSIC &&this.musicPlayer.play();
+      MUSIC && this.musicPlayer.play();
 
     } catch (error) {
       console.error(error);
@@ -363,7 +364,7 @@ class GameEngine {
           this.player.x--;
           break;
       }
-      relayMessage(`You move ${direction}.\n`, "user");
+      relayMessage(`You move ${direction}.\n`, "general");
 
       // Generate the room if it hasn't been generated yet
       if (!this.gameMap.rooms[`${this.player.x},${this.player.y}`] && GENERATE) {
