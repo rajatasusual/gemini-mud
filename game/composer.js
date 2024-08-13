@@ -12,6 +12,7 @@ if (typeof window === "undefined") {
 } else {
   // Assuming you have a way to provide the API key in the browser environment
   GoogleGenerativeAI = window.GoogleGenerativeAI;
+  Ajv = window.ajv7;
 }
 
 /**
