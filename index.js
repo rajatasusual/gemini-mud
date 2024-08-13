@@ -335,12 +335,12 @@ async function runGame() {
 
   ENGINE = await new GameEngine(gameMap, userPreferences);
 
-  hideLoadingScreen();
-
   // Generate D3 data and render the graph
   const { nodes, links } = ENGINE.generateD3Data(true);
 
   GRAPH.init(nodes, links);
+
+  hideLoadingScreen();
 }
 
 /**

@@ -50089,11 +50089,10 @@ function _runGame() {
           return new GameEngine(gameMap, userPreferences);
         case 6:
           ENGINE = _context3.sent;
-          hideLoadingScreen();
-
           // Generate D3 data and render the graph
           _ENGINE$generateD3Dat = ENGINE.generateD3Data(true), nodes = _ENGINE$generateD3Dat.nodes, links = _ENGINE$generateD3Dat.links;
           GRAPH.init(nodes, links);
+          hideLoadingScreen();
         case 10:
         case "end":
           return _context3.stop();

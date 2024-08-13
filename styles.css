@@ -76,17 +76,6 @@ body {
     cursor: pointer;
 }
 
-/* ...rest of your CSS... */
-
-#container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    padding: 20px;
-}
-
 .loading-screen {
     position: fixed;
     top: 0;
@@ -166,11 +155,20 @@ body {
     }
 }
 
-#chat {
+#container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+#chat {
     padding: 10px;
-    height: 40%;
+    width: 66%;
+    height: 80%;
+    overflow-y: scroll;
 }
 
 #scrollIndicator {
@@ -213,9 +211,8 @@ body {
 }
 
 #map {
-    height: 60%;
-    display: flex;
-    overflow: hidden;
+    width: 34%;
+    height: 80%;
     margin-top: 20px;
 }
 
@@ -304,10 +301,6 @@ body {
 .vline {
     stroke: #ccc;
     stroke-width: 0.1px;
-}
-
-.legend-text {
-    fill: #FFFFFF;
 }
 
 .node {

@@ -1,6 +1,6 @@
 let SVG = null;
-let SVGWidth = window.innerWidth;
-let SVGHeight = window.innerHeight / 2;
+let SVGWidth = window.innerWidth / 2;
+let SVGHeight = window.innerHeight;
 const gridSize = 20; // Size of each grid cell
 
 let mouse_x = 0, mouse_y = 0;
@@ -45,8 +45,8 @@ const GRAPH = {
   },
 
   updateSVGSize: () => {
-    SVGWidth = (window.innerWidth) - 50;
-    SVGHeight = window.innerHeight / 2;
+    SVGWidth = window.innerWidth / 2;
+    SVGHeight = window.innerHeight;
     SVG.attr("width", SVGWidth).attr("height", SVGHeight);
     GRAPH.addLegend();
     SIMULATION.force("center", d3.forceCenter(SVGWidth / 2, SVGHeight / 2));
@@ -85,17 +85,17 @@ const GRAPH = {
     const rect = SVG.append("g")
       .attr("class", "legend");
 
-    let y = 60; // Initial y position for legend entries
+    let y = 20; // Initial y position for legend entries
 
     legendDetails.forEach(legendEntry => {
       rect.append("circle")
-        .attr("cx", SVGWidth - 150) // Adjust x position relative to rect
+        .attr("cx", 20) // Adjust x position relative to rect
         .attr("cy", y)
         .attr("r", 5)
         .attr("class", `${legendEntry[0]}`)
         .attr("pointer-events", "none");
       rect.append("text")
-        .attr("x", SVGWidth - 150 + 20) // Adjust x position relative to rect
+        .attr("x", 30) // Adjust x position relative to rect
         .attr("y", y)
         .text(legendEntry[1])
         .style("font-size", "14px")
