@@ -1,72 +1,96 @@
-# Gemini MUD
+## Gemini MUD
 
-A MUD-style text adventure game powered by Google Gemini AI. Explore a dynamic world, solve puzzles, interact with unique characters, and uncover hidden secrets.
+[![Gemini MUD](llama.png)](https://rajatasusual.github.io/gemini-mud/)
 
-## Table of Contents
+**A Text-Based Adventure Game with AI-Generated Worlds**
 
-- [Introduction](#introduction)
-- [Features](#features)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Running the Game](#running-the-game)
-- [How to Play](#how-to-play)
-- [Contributing](#contributing)
-- [License](#license)
+Gemini MUD is a text-based Multi-User Dungeon (MUD) game that leverages AI to procedurally generate unique stages, complete with immersive music and ambience. 
 
-## Introduction
+**DEMO: [https://rajatasusual.github.io/gemini-mud/](https://rajatasusual.github.io/gemini-mud/)**
+
+### Table of Contents
+
+* [Introduction](#introduction)
+* [Features](#features)
+* [How to Play](#how-to-play)
+* [Technical Details](#technical-details)
+* [Getting Started](#getting-started)
+* [Demo](#demo)
+* [Disclaimer](#disclaimer) 
+
+
+### Introduction
 
 Gemini MUD combines the nostalgia of classic text-based adventure games with the power of modern AI to generate dynamic and engaging content. Every room description, character interaction, and plot twist is crafted by the Gemini AI model, creating a truly unique experience each time you play.
 
-## Features
+### Features
 
-- **Dynamic Map and Room Generation:** Entire maps and rooms are created on the fly as you explore, each with its own unique description, items, and potential dangers.
-- **Procedural Map:** The game world is procedurally generated, ensuring a new layout and challenges with every playthrough.
-- **Interactive Storytelling:** Engage with the world through text commands, uncovering a captivating storyline.
-- **Character Interactions:** Meet a variety of characters, each with their own personality and motivations.
-- **Item Collection and Usage:** Find and collect items that can help you solve puzzles or overcome obstacles.
-- **Google Gemini AI Integration:** Leveraging Google's powerful AI model for rich, creative content generation.
+* **AI-Powered World Generation:** Experience a dynamic world where each stage is procedurally generated using AI, offering endless possibilities for exploration.
+* **Atmospheric Music and Ambience:** Immerse yourself in the game's atmosphere with AI-generated music and ambience that complements each stage's unique characteristics.
+* **Text-Based Interface:** Engage in a classic text-based adventure, relying on your imagination and the power of words to navigate the world.
+* **Simple Commands:** Interact with the game using intuitive commands like 'go north', 'look', 'take', and more.
 
-## Getting Started
+### How to Play
 
-### Prerequisites
+1. **Enter your OpenAI API Key:** Provide your API key to enable the AI features.
+2. **Answer the Questions:** Respond to a series of questions to customize your adventure:
+   * Your name
+   * The era in which the adventure takes place
+   * The genre or mood of the adventure
+3. **Start Exploring:**  Begin your journey by typing 'start'.
+4. **Navigate the World:** Use commands like 'go north', 'go south', 'go east', and 'go west' to move between rooms.
+5. **Interact with the Environment:**  Type 'look' to observe your surroundings and discover hidden details.
+6. **Uncover the Story:** Progress through the game, encountering challenges and making choices that shape your narrative.
 
-- **Node.js and npm:** Make sure you have Node.js and npm installed on your system. You can download them from [https://nodejs.org/](https://nodejs.org/).
-- **Google Cloud Project: (Optional)** You'll need a Google Cloud Project with the Gemini API enabled. Follow the instructions on [https://developers.generativeai.google/](https://developers.generativeai.google/) to set this up.
-- **API Key:** Obtain an API key for the Gemini API from your Google Cloud Project. Store it in a `.env` file at the root of this project:
+### Technical Details
 
-```
-API_KEY=your_api_key
-```
+* **Core Files:**
+    * `index.js`: Main game logic and user interaction handling
+    * `game-map.js`: Manages the procedural generation of the game map
+    * `game-schema.js`: Defines the data structure for storing game information
+    * `game-engine.js`: Handles game state, player actions, and AI interactions
+    * `room-generator.js`: Generates room descriptions using AI
+    * `composer.js`: Creates music and ambience using AI
+    * `describer.js`:  Generates narrative descriptions using AI
+    * `index.html`:  Provides the user interface for the game
+* **AI Integration:** The game utilizes the Google Generative AI API to:
+    * Generate unique room descriptions
+    * Compose fitting music and ambience
+    * Create narrative summaries of the player's journey
 
-### Installation
+### Getting Started
 
-1. Clone this repository:
+1. **Clone the Repository:** 
+   ```bash
+   git clone https://github.com/rajatasusual/gemini-mud.git
+   ```
+2. **Obtain an API Key:** Get an API key from OpenAI.
+3. **Play the Game:**
+    * **In Browser:**
+        1. Open the `index.html` file in your web browser.
+        2. Enter your OpenAI API Key when prompted.
+    * **Command Line Interface (CLI):**
+        1. **Install Dependencies:**
+           ```bash
+           npm install
+           ```
+        2. **Set Environment Variables:** Create a `.env` file in the root directory and add your API key:
+           ```
+           API_KEY=your_api_key_here
+           ```
+        3. **Run the Game:**
+           ```bash
+           npm start
+           ```
 
-```bash
-git clone [https://github.com/](https://github.com/)rajattasusual/gemini-mud.git
-```
+### Demo
 
-2. Install dependencies:
+You can also try a live demo of the game at [rajatasusual.github.io/gemini-mud/](https://rajatasusual.github.io/gemini-mud/). 
 
-```bash
-cd gemini-mud
-npm install
-```
 
-### Running the Game
+### Disclaimer
 
-```bash
-npm start
-```
-
-## How to Play
-
-1. **Explore:** Move around the world by typing directions like `north`, `south`, `east`, or `west`.
-2. **Look Around:** Use the `look` command to get a detailed description of the current room.
-3. **Interact:** Type `take <item>`, `use <item>`, or `talk <npc>` to interact with objects and characters.
-4. **Inventory:** Type `inventory` to see what items you're carrying.
-5. **Quit:** Type `quit` to exit the game.
+Please note that this is a text-based game and relies heavily on your imagination to bring the world to life.  The AI-generated content may vary in quality and coherence.
 
 ## Contributing
 
@@ -75,3 +99,7 @@ Contributions are welcome! Please feel free to submit bug reports, feature reque
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+**Enjoy your adventure in the ever-evolving world of Gemini MUD!** 
+
+**Please let me know if you have any other questions.** 
