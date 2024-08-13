@@ -5321,10 +5321,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 // Conditional import for Node.js environment
 var GoogleGenerativeAI;
 var dotenv;
+var Ajv;
 if (typeof window === "undefined") {
   GoogleGenerativeAI = (__webpack_require__(/*! @google/generative-ai */ "@google/generative-ai").GoogleGenerativeAI);
   dotenv = __webpack_require__(/*! dotenv */ "./node_modules/dotenv/lib/main.js");
   dotenv.config();
+  Ajv = (__webpack_require__(/*! ajv */ "ajv").Ajv);
 } else {
   // Assuming you have a way to provide the API key in the browser environment
   GoogleGenerativeAI = window.GoogleGenerativeAI;
@@ -5499,11 +5501,12 @@ function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" 
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 // Conditional import for Node.js environment
 var GoogleGenerativeAI;
-var dotenv;
+var Ajv;
 if (typeof window === "undefined") {
   GoogleGenerativeAI = (__webpack_require__(/*! @google/generative-ai */ "@google/generative-ai").GoogleGenerativeAI);
   dotenv = __webpack_require__(/*! dotenv */ "./node_modules/dotenv/lib/main.js");
   dotenv.config();
+  Ajv = (__webpack_require__(/*! ajv */ "ajv").Ajv);
 } else {
   // Assuming you have a way to provide the API key in the browser environment
   GoogleGenerativeAI = window.GoogleGenerativeAI;
@@ -5631,10 +5634,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 // Conditional import for Node.js environment
 var GoogleGenerativeAI;
 var dotenv;
+var Ajv;
 if (typeof window === "undefined") {
   GoogleGenerativeAI = (__webpack_require__(/*! @google/generative-ai */ "@google/generative-ai").GoogleGenerativeAI);
   dotenv = __webpack_require__(/*! dotenv */ "./node_modules/dotenv/lib/main.js");
   dotenv.config();
+  Ajv = (__webpack_require__(/*! ajv */ "ajv").Ajv);
 } else {
   // Assuming you have a way to provide the API key in the browser environment
   GoogleGenerativeAI = window.GoogleGenerativeAI;
@@ -5836,8 +5841,10 @@ var GameEngine = /*#__PURE__*/function () {
     this.composer = new Composer();
 
     // Initialize the conductor
-    this.conductor = new BandJS();
-    this.conductor.setMasterVolume(25);
+    if (typeof window !== "undefined") {
+      this.conductor = new BandJS();
+      this.conductor.setMasterVolume(25);
+    }
 
     // Initialize the music player
     this.musicPlayer = null;
@@ -49892,7 +49899,7 @@ function appendMessage(message, type) {
   messagesDiv.appendChild(messageElement);
 
   // Type out the message
-  typeMessage(messageElement, message, 25);
+  typeMessage(messageElement, message, 5);
 }
 
 /**

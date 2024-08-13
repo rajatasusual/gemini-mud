@@ -1,11 +1,13 @@
 // Conditional import for Node.js environment
 let GoogleGenerativeAI;
-let dotenv;
+let Ajv
 
 if (typeof window === "undefined") {
   GoogleGenerativeAI = require("@google/generative-ai").GoogleGenerativeAI;
   dotenv = require("dotenv");
   dotenv.config();
+  Ajv = require("ajv").Ajv;
+
 } else {
   // Assuming you have a way to provide the API key in the browser environment
   GoogleGenerativeAI = window.GoogleGenerativeAI;

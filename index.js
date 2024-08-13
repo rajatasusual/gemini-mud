@@ -173,7 +173,7 @@ function appendMessage(message, type) {
   messagesDiv.appendChild(messageElement);
 
   // Type out the message
-  typeMessage(messageElement, message, 25);
+  typeMessage(messageElement, message, 5);
 }
 
 /**
